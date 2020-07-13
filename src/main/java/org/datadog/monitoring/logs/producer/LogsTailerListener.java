@@ -1,4 +1,4 @@
-package org.datadog.monitoring.logs;
+package org.datadog.monitoring.logs.producer;
 
 import org.apache.commons.io.input.TailerListenerAdapter;
 

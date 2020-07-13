@@ -1,11 +1,14 @@
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
-import org.datadog.monitoring.logs.LogsParser;
-import org.datadog.monitoring.logs.LogsTailerListener;
+import org.datadog.monitoring.logs.ApacheCommonLogsParser;
+import org.datadog.monitoring.logs.LogLine;
+import org.datadog.monitoring.logs.consumer.LogsConsumer;
+import org.datadog.monitoring.logs.producer.LogsTailerListener;
+import org.datadog.monitoring.stats.StatsConsumer;
 
 import java.nio.file.Paths;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class MonitoringApplication {
     public static void main(String[] args) {
@@ -14,21 +17,27 @@ public class MonitoringApplication {
 
     private static void createLogsTailerListener() {
         BlockingQueue<String> logsPipe = new LinkedBlockingQueue<>();
+        BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
 
         TailerListener listener = new LogsTailerListener(logsPipe);
-        Tailer tailer = new Tailer(Paths.get("/var/log/system.log").toFile(), listener, 500, true);
-        Thread producerThread = new Thread(tailer);
-        producerThread.setDaemon(true); // optional
-        producerThread.start();
+        // flog -o "/tmp/access.log" -t log -d 1 -w
+        Tailer tailer = new Tailer(Paths.get("/tmp/access.log").toFile(), listener, 1, true);
+        Thread logsProducerThread = new Thread(tailer);
+        logsProducerThread.start();
 
-        LogsParser logsParser = new LogsParser(logsPipe);
-        Thread consumerThread = new Thread(logsParser);
-        consumerThread.setDaemon(true);
-        consumerThread.start();
+        LogsConsumer logsConsumer = new LogsConsumer(logsPipe, logLinesQueue, new ApacheCommonLogsParser());
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        // Run the parse once every x seconds.
+        // and get all the logs we can in this x second timespan.
+        executorService.scheduleAtFixedRate(logsConsumer, 10, 10, TimeUnit.SECONDS);
+
+        StatsConsumer statsConsumer = new StatsConsumer(logLinesQueue);
+        Thread statsConsumerThread = new Thread(statsConsumer);
+        statsConsumerThread.start();
 
         try {
-            producerThread.join();
-            consumerThread.join();
+            logsProducerThread.join();
+            statsConsumerThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
