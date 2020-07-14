@@ -4,3 +4,6 @@
 # IntelliJ folder and files
 .idea
 *.iml
+
+# Compiled java files
+target
