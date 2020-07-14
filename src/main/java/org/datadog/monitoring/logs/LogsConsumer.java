@@ -1,8 +1,6 @@
-package org.datadog.monitoring.logs.consumer;
+package org.datadog.monitoring.logs;
 
-import org.datadog.monitoring.logs.LogLine;
-import org.datadog.monitoring.logs.LogsParser;
-import org.datadog.monitoring.logs.LogsParsingException;
+import org.datadog.monitoring.SequentialConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,17 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class LogsConsumer implements Runnable {
-    BlockingQueue<String> logsQueue;
-    BlockingQueue<List<LogLine>> logLinesQueue;
+public class LogsConsumer extends SequentialConsumer<String, List<LogLine>> {
     LogsParser logsParser;
 
     private static final Logger logger = LoggerFactory.getLogger(LogsConsumer.class);
 
-    public LogsConsumer(BlockingQueue<String> logsQueue, BlockingQueue<List<LogLine>> logLinesQueue, LogsParser parser) {
-        this.logsQueue = logsQueue;
+    public LogsConsumer(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> outputQueue, LogsParser parser) {
+        super(inputQueue, outputQueue);
         this.logsParser = parser;
-        this.logLinesQueue = logLinesQueue;
     }
 
     private List<LogLine> parseIncomingLogs(List<String> incomingLogs) {
@@ -40,11 +35,12 @@ public class LogsConsumer implements Runnable {
     public void run() {
         try {
             List<String> incomingLogs = new ArrayList<>();
-            incomingLogs.add(logsQueue.take());
+            // wait for the new set of incoming logs.
+            incomingLogs.add(inputQueue.take());
             // Empty the queue for the next set of logs.
-            logsQueue.drainTo(incomingLogs, logsQueue.size());
-
-            logLinesQueue.offer(parseIncomingLogs(incomingLogs));
+            inputQueue.drainTo(incomingLogs, inputQueue.size());
+            // offer the parsed logs to the output queue for the next consumer.
+            outputQueue.offer(parseIncomingLogs(incomingLogs));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -39,10 +39,4 @@ public class ApacheCommonLogsParser implements LogsParser {
 
         throw new LogsParsingException("Invalid log format");
     }
-
-    private static String dashIfNull(String group) {
-        if (group == null) return "-";
-
-        return group;
-    }
 }

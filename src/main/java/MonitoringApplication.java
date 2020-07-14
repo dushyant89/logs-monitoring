@@ -1,10 +1,13 @@
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
+import org.datadog.monitoring.SequentialConsumer;
+import org.datadog.monitoring.alerts.AlertsConsumer;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
-import org.datadog.monitoring.logs.consumer.LogsConsumer;
-import org.datadog.monitoring.logs.producer.LogsTailerListener;
+import org.datadog.monitoring.logs.LogsConsumer;
+import org.datadog.monitoring.logs.LogsProducer;
 import org.datadog.monitoring.stats.StatsConsumer;
+import org.datadog.monitoring.stats.StatsSummary;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -18,8 +21,9 @@ public class MonitoringApplication {
     private static void createLogsTailerListener() {
         BlockingQueue<String> logsPipe = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
 
-        TailerListener listener = new LogsTailerListener(logsPipe);
+        TailerListener listener = new LogsProducer(logsPipe);
         // flog -o "/tmp/access.log" -t log -d 1 -w
         // Tail the logs with minimum possible delays so that it doesn't hamper with the rate at which
         // the consumer is running.
@@ -27,19 +31,24 @@ public class MonitoringApplication {
         Thread logsProducerThread = new Thread(tailer);
         logsProducerThread.start();
 
-        LogsConsumer logsConsumer = new LogsConsumer(logsPipe, logLinesQueue, new ApacheCommonLogsParser());
+        SequentialConsumer<String, List<LogLine>> logsConsumer = new LogsConsumer(logsPipe, logLinesQueue, new ApacheCommonLogsParser());
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         // Run the consumer once every x seconds.
         // and get all the logs we can in this x second timespan.
         executorService.scheduleAtFixedRate(logsConsumer, 10, 10, TimeUnit.SECONDS);
 
-        StatsConsumer statsConsumer = new StatsConsumer(logLinesQueue);
+        StatsConsumer statsConsumer = new StatsConsumer(logLinesQueue, statsSummariesQueue);
         Thread statsConsumerThread = new Thread(statsConsumer);
         statsConsumerThread.start();
+
+        AlertsConsumer alertsConsumer = new AlertsConsumer(statsSummariesQueue, 120 / 10, 10);
+        Thread alertsThread = new Thread(alertsConsumer);
+        alertsThread.start();
 
         try {
             logsProducerThread.join();
             statsConsumerThread.join();
+            alertsThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

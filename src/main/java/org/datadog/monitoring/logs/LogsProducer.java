@@ -1,13 +1,13 @@
-package org.datadog.monitoring.logs.producer;
+package org.datadog.monitoring.logs;
 
 import org.apache.commons.io.input.TailerListenerAdapter;
 
 import java.util.concurrent.BlockingQueue;
 
-public class LogsTailerListener extends TailerListenerAdapter {
+public class LogsProducer extends TailerListenerAdapter {
     BlockingQueue<String> logsProducer;
 
-    public LogsTailerListener(BlockingQueue<String> logsProducer) {
+    public LogsProducer(BlockingQueue<String> logsProducer) {
         this.logsProducer = logsProducer;
     }
 
