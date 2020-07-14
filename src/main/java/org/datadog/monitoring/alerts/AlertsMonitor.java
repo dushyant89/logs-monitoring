@@ -7,25 +7,45 @@ public class AlertsMonitor {
     private final CircularFifoQueue<StatsSummary> statsSummariesWindow;
     private int totalHistPerMonitoringSession;
     private final int threshold;
+    Alert alert;
 
     public AlertsMonitor(int alertsWindowSize, int threshold) {
         this.statsSummariesWindow = new CircularFifoQueue<>(alertsWindowSize);
         this.threshold = threshold;
+        this.alert = new Alert(Alert.Type.HighTraffic);
     }
 
     public void processAlert(StatsSummary statsSummary) {
-        if (statsSummariesWindow.isFull()) {
-            totalHistPerMonitoringSession -= statsSummariesWindow.remove().getTotalRequestCount();
-        }
-
         statsSummariesWindow.offer(statsSummary);
 
         totalHistPerMonitoringSession += statsSummary.getTotalRequestCount();
 
-        int averageHitsPerMonitoringSession = Math.round((float) totalHistPerMonitoringSession / statsSummariesWindow.maxSize());
+        if (statsSummariesWindow.isAtFullCapacity()) {
+            int averageHitsPerMonitoringSession = Math.round((float) totalHistPerMonitoringSession / statsSummariesWindow.maxSize());
 
-        if (averageHitsPerMonitoringSession > threshold) {
-            System.out.println("High traffic alert generated!!!!!");
+            totalHistPerMonitoringSession -= statsSummariesWindow.remove().getTotalRequestCount();
+
+            if (averageHitsPerMonitoringSession > threshold) {
+                if (!alert.getAlertSate().equals(Alert.State.Active)) {
+                    alert.setAlertSate(Alert.State.Active);
+                    alert.trigger();
+                }
+
+                return;
+            }
+
+            if (averageHitsPerMonitoringSession < threshold) {
+                if (alert.getAlertSate().equals(Alert.State.Active)) {
+                    alert.setAlertSate(Alert.State.Recovered);
+                    alert.trigger();
+
+                    return;
+                }
+
+                if (alert.getAlertSate().equals(Alert.State.Recovered)) {
+                    alert.setAlertSate(Alert.State.Inactive);
+                }
+            }
         }
     }
 }

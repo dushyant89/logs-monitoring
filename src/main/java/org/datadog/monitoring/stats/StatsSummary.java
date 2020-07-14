@@ -23,7 +23,7 @@ public class StatsSummary {
     public void printSummary() {
         System.out.println("****** Traffic stats  ******");
         System.out.println(String.format("Total requests served: %s", totalRequestCount));
-        System.out.println(String.format("Total content size: %s", getContentSizeInKB()));
+        System.out.println(String.format("Total content size: %s KB", getContentSizeInKB()));
 
         if (sectionCount.size() > 0) {
             System.out.println("Hits by section:");

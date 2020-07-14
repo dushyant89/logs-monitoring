@@ -1,16 +1,16 @@
 package org.datadog.monitoring;
 
-import lombok.Data;
-
 import java.util.concurrent.BlockingQueue;
 
-@Data
-public abstract class SequentialConsumer<T,V> implements Runnable {
-    protected BlockingQueue<T> inputQueue;
-    protected BlockingQueue<V> outputQueue;
+public abstract class SequentialConsumer<T,V> extends SimpleConsumer<T> {
+    protected BlockingQueue<V> nextQueue;
 
-    public SequentialConsumer(BlockingQueue<T> inputQueue, BlockingQueue<V> outputQueue) {
-        this.inputQueue = inputQueue;
-        this.outputQueue = outputQueue;
+    public SequentialConsumer(BlockingQueue<T> inputQueue, BlockingQueue<V> nextQueue) {
+        super(inputQueue);
+        this.nextQueue = nextQueue;
+    }
+
+    public void next(V forNextQueue) {
+        nextQueue.offer(forNextQueue);
     }
 }

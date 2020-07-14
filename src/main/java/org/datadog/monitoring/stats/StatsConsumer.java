@@ -8,8 +8,8 @@ import java.util.concurrent.BlockingQueue;
 
 public class StatsConsumer extends SequentialConsumer<List<LogLine>, StatsSummary> {
 
-    public StatsConsumer(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> outputQueue) {
-        super(inputQueue, outputQueue);
+    public StatsConsumer(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue) {
+        super(inputQueue, nextQueue);
     }
 
     public void run() {
@@ -18,7 +18,7 @@ public class StatsConsumer extends SequentialConsumer<List<LogLine>, StatsSummar
                 StatsSummary statsSummary = prepareStatsSummary(inputQueue.take());
                 statsSummary.printSummary();
                 // offer the summary for the next consumer.
-                outputQueue.offer(statsSummary);
+                next(statsSummary);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

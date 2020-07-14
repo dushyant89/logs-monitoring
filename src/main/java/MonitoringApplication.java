@@ -1,6 +1,7 @@
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 import org.datadog.monitoring.SequentialConsumer;
+import org.datadog.monitoring.SimpleConsumer;
 import org.datadog.monitoring.alerts.AlertsConsumer;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
@@ -35,13 +36,13 @@ public class MonitoringApplication {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         // Run the consumer once every x seconds.
         // and get all the logs we can in this x second timespan.
-        executorService.scheduleAtFixedRate(logsConsumer, 10, 10, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(logsConsumer, 5, 5, TimeUnit.SECONDS);
 
         StatsConsumer statsConsumer = new StatsConsumer(logLinesQueue, statsSummariesQueue);
         Thread statsConsumerThread = new Thread(statsConsumer);
         statsConsumerThread.start();
 
-        AlertsConsumer alertsConsumer = new AlertsConsumer(statsSummariesQueue, 120 / 10, 10);
+        SimpleConsumer<StatsSummary> alertsConsumer = new AlertsConsumer(statsSummariesQueue, 10, 10);
         Thread alertsThread = new Thread(alertsConsumer);
         alertsThread.start();
 

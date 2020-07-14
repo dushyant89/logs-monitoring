@@ -13,8 +13,8 @@ public class LogsConsumer extends SequentialConsumer<String, List<LogLine>> {
 
     private static final Logger logger = LoggerFactory.getLogger(LogsConsumer.class);
 
-    public LogsConsumer(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> outputQueue, LogsParser parser) {
-        super(inputQueue, outputQueue);
+    public LogsConsumer(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> nextQueue, LogsParser parser) {
+        super(inputQueue, nextQueue);
         this.logsParser = parser;
     }
 
@@ -40,7 +40,7 @@ public class LogsConsumer extends SequentialConsumer<String, List<LogLine>> {
             // Empty the queue for the next set of logs.
             inputQueue.drainTo(incomingLogs, inputQueue.size());
             // offer the parsed logs to the output queue for the next consumer.
-            outputQueue.offer(parseIncomingLogs(incomingLogs));
+            next(parseIncomingLogs(incomingLogs));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
