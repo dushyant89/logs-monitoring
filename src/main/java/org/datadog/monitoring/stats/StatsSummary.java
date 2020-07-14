@@ -15,6 +15,8 @@ public class StatsSummary {
 
     private final Map<String, Integer> sectionWiseHits = new HashMap<>();
 
+    private final Map<HttpMethod, Integer> httpMethodsWiseHits = new HashMap<>();
+
     public void incrementRequestCount() { this.totalRequestCount++; }
 
     public void incrementRequestContentSize(int size) { this.totalRequestContentSize += size; }
@@ -30,7 +32,15 @@ public class StatsSummary {
         output.append(String.format("Total content size: %s KB\n", getContentSizeInKB()));
 
         if (sectionWiseHits.size() > 0) {
-            output.append(getTopSections());
+            output.append(String.format("Top %s sections by hits:\n", numberOfTopSections));
+
+            getTopSections().forEach((section, hitCount) -> output.append(String.format("\t%s -> %s\n", section, hitCount)));
+        }
+
+        if (httpMethodsWiseHits.size() > 0) {
+            output.append("HTTP Methods by hits:\n");
+
+            httpMethodsWiseHits.forEach((httpMethod, count) -> output.append(String.format("\t%s -> %s\n", httpMethod.name(), count)));
         }
 
         output.append("****** End of traffic stats ******\n");
@@ -38,10 +48,8 @@ public class StatsSummary {
         return output.toString();
     }
 
-    private StringBuilder getTopSections() {
-        StringBuilder output = new StringBuilder();
-        output.append(String.format("Top %s sections by hits:\n", numberOfTopSections));
-
+    private Map<String, Integer> getTopSections() {
+        final Map<String, Integer> topSections = new HashMap<>();
         final NavigableMap<Integer, Set<String>> countVsSectionsMap = new TreeMap<>(Comparator.reverseOrder());
 
         sectionWiseHits.forEach((k,v) -> {
@@ -49,21 +57,18 @@ public class StatsSummary {
             countVsSectionsMap.get(v).add(k);
         });
 
-        int count = 0;
         Set<Integer> topHits = countVsSectionsMap.keySet();
         for (Integer topHit: topHits) {
             for (String section: countVsSectionsMap.get(topHit)) {
-                output.append(String.format("\t%s -> %s\n", section, topHit));
+                topSections.put(section, topHit);
 
-                count += 1;
-
-                if (count == numberOfTopSections) {
-                    return output;
+                if (topSections.size() == numberOfTopSections) {
+                    return topSections;
                 }
             }
         }
 
-        return output;
+        return topSections;
     }
 
     private int getContentSizeInKB() {

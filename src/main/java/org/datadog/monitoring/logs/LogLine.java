@@ -2,6 +2,7 @@ package org.datadog.monitoring.logs;
 
 import lombok.Builder;
 import lombok.Data;
+import org.datadog.monitoring.stats.HttpMethod;
 
 import java.time.ZonedDateTime;
 
@@ -18,7 +19,7 @@ public class LogLine {
 
     private String requestPath;
 
-    private String httpMethod;
+    private HttpMethod httpMethod;
 
     private int statusCode;
 

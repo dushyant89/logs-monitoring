@@ -1,16 +1,16 @@
-package org.datadog.monitoring.alerts;
+package org.datadog.monitoring.stats;
 
 import org.datadog.monitoring.SimpleConsumer;
-import org.datadog.monitoring.stats.StatsSummary;
+import org.datadog.monitoring.alerts.AlertsMonitor;
 
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
-public class AlertsConsumer extends SimpleConsumer<StatsSummary> {
+public class StatsSummaryConsumer extends SimpleConsumer<StatsSummary> {
     private final AlertsMonitor alertsMonitor;
     private final BlockingQueue<String> outputQueue;
 
-    public AlertsConsumer(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> outputQueue, int alertsWindowSize, int threshold) {
+    public StatsSummaryConsumer(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> outputQueue, int alertsWindowSize, int threshold) {
         super(inputQueue);
         this.outputQueue = outputQueue;
         this.alertsMonitor = new AlertsMonitor(alertsWindowSize, threshold);

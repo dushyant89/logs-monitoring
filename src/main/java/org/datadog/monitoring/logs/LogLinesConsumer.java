@@ -1,15 +1,15 @@
-package org.datadog.monitoring.stats;
+package org.datadog.monitoring.logs;
 
 import org.datadog.monitoring.SequentialConsumer;
-import org.datadog.monitoring.logs.LogLine;
+import org.datadog.monitoring.stats.StatsSummary;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class StatsConsumer extends SequentialConsumer<List<LogLine>, StatsSummary> {
+public class LogLinesConsumer extends SequentialConsumer<List<LogLine>, StatsSummary> {
     BlockingQueue<String> outputQueue;
 
-    public StatsConsumer(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
+    public LogLinesConsumer(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
         super(inputQueue, nextQueue);
         this.outputQueue = outputQueue;
     }
@@ -41,13 +41,9 @@ public class StatsConsumer extends SequentialConsumer<List<LogLine>, StatsSummar
                 section = sectionParts[1];
             }
 
-            statsSummary.getSectionWiseHits().compute(section, (k,v) -> {
-                if (v == null) {
-                    return 1;
-                }
+            statsSummary.getHttpMethodsWiseHits().compute(logLine.getHttpMethod(), (k,v) -> v == null ? 1: v+1);
 
-                return v + 1;
-            });
+            statsSummary.getSectionWiseHits().compute(section, (k,v) -> v == null ? 1: v+1);
         }
 
         return statsSummary;

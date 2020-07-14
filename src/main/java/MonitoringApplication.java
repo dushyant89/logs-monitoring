@@ -2,12 +2,12 @@ import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 import org.datadog.monitoring.SequentialConsumer;
 import org.datadog.monitoring.SimpleConsumer;
-import org.datadog.monitoring.alerts.AlertsConsumer;
+import org.datadog.monitoring.stats.StatsSummaryConsumer;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
 import org.datadog.monitoring.logs.LogsConsumer;
 import org.datadog.monitoring.logs.LogsProducer;
-import org.datadog.monitoring.stats.StatsConsumer;
+import org.datadog.monitoring.logs.LogLinesConsumer;
 import org.datadog.monitoring.stats.StatsSummary;
 import org.datadog.monitoring.ui.OutputMessageConsumer;
 
@@ -40,11 +40,11 @@ public class MonitoringApplication {
         // and get all the logs we can in this x second timespan.
         executorService.scheduleAtFixedRate(logsConsumer, 5, 5, TimeUnit.SECONDS);
 
-        StatsConsumer statsConsumer = new StatsConsumer(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
-        Thread statsConsumerThread = new Thread(statsConsumer);
+        LogLinesConsumer logLinesConsumer = new LogLinesConsumer(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
+        Thread statsConsumerThread = new Thread(logLinesConsumer);
         statsConsumerThread.start();
 
-        SimpleConsumer<StatsSummary> alertsConsumer = new AlertsConsumer(statsSummariesQueue, outputMessagesQueue, 10, 10);
+        SimpleConsumer<StatsSummary> alertsConsumer = new StatsSummaryConsumer(statsSummariesQueue, outputMessagesQueue, 10, 10);
         Thread alertsThread = new Thread(alertsConsumer);
         alertsThread.start();
 
