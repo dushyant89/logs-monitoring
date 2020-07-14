@@ -41,6 +41,7 @@ public class LogsConsumer implements Runnable {
         try {
             List<String> incomingLogs = new ArrayList<>();
             incomingLogs.add(logsQueue.take());
+            // Empty the queue for the next set of logs.
             logsQueue.drainTo(incomingLogs, logsQueue.size());
 
             logLinesQueue.offer(parseIncomingLogs(incomingLogs));

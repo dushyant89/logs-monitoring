@@ -21,12 +21,14 @@ public class StatsSummary {
     public void incrementRequestContentSize(int size) { this.totalRequestContentSize += size; }
 
     public void print() {
+        System.out.println("****** Traffic stats  ******");
         System.out.println(String.format("Total requests served: %s", totalRequestCount));
         System.out.println(String.format("Total content size: %s", totalRequestContentSize));
 
         if (sectionCount.size() > 0) {
-            System.out.println("Hits by section");
-            sectionCount.forEach((k,v) -> System.out.println(String.format("\t\t%s -> %s", k, v)));
+            System.out.println("Hits by section:");
+            sectionCount.forEach((k,v) -> System.out.println(String.format("\t%s -> %s", k, v)));
         }
+        System.out.println("****** End of traffic stats ******\n");
     }
 }

@@ -1,5 +1,6 @@
 package org.datadog.monitoring.logs;
 
+import org.datadog.monitoring.utils.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,7 @@ public class ApacheCommonLogsParser implements LogsParser {
                     .host(matcher.group(1))
                     .user(matcher.group(2))
                     .userId(matcher.group(3))
-                    .timestamp(matcher.group(4))
+                    .dateTime(DateTimeUtil.getZonedDateTime(matcher.group(4)))
                     .httpMethod(matcher.group(5))
                     .requestPath(matcher.group(6))
                     .httpVersion(matcher.group(7))

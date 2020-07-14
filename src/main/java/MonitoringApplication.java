@@ -21,13 +21,15 @@ public class MonitoringApplication {
 
         TailerListener listener = new LogsTailerListener(logsPipe);
         // flog -o "/tmp/access.log" -t log -d 1 -w
+        // Tail the logs with minimum possible delays so that it doesn't hamper with the rate at which
+        // the consumer is running.
         Tailer tailer = new Tailer(Paths.get("/tmp/access.log").toFile(), listener, 1, true);
         Thread logsProducerThread = new Thread(tailer);
         logsProducerThread.start();
 
         LogsConsumer logsConsumer = new LogsConsumer(logsPipe, logLinesQueue, new ApacheCommonLogsParser());
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        // Run the parse once every x seconds.
+        // Run the consumer once every x seconds.
         // and get all the logs we can in this x second timespan.
         executorService.scheduleAtFixedRate(logsConsumer, 10, 10, TimeUnit.SECONDS);
 

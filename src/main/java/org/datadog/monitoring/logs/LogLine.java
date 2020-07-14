@@ -3,6 +3,8 @@ package org.datadog.monitoring.logs;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.ZonedDateTime;
+
 @Data
 @Builder
 public class LogLine {
@@ -12,7 +14,7 @@ public class LogLine {
 
     private String userId;
 
-    private String timestamp;
+    private ZonedDateTime dateTime;
 
     private String requestPath;
 
