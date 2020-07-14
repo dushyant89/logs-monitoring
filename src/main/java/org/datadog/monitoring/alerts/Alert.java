@@ -30,9 +30,8 @@ public class Alert {
         }
     }
 
-    public void trigger() {
-        if (alertSate != State.Inactive) {
-            System.out.println(String.format("\t!!! A %s is now %s !!!", alertType.description, alertSate.name()));
-        }
+    @Override
+    public String toString() {
+        return String.format("\t!!! A %s is now %s !!!\n", alertType.description, alertSate.name());
     }
 }

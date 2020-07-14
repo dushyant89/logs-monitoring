@@ -1,13 +1,18 @@
 package org.datadog.monitoring.alerts;
 
+import lombok.Data;
+import lombok.NonNull;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.datadog.monitoring.stats.StatsSummary;
 
+import java.util.Optional;
+
+@Data
 public class AlertsMonitor {
     private final CircularFifoQueue<StatsSummary> statsSummariesWindow;
     private int totalHistPerMonitoringSession;
     private final int threshold;
-    Alert alert;
+    private Alert alert;
 
     public AlertsMonitor(int alertsWindowSize, int threshold) {
         this.statsSummariesWindow = new CircularFifoQueue<>(alertsWindowSize);
@@ -15,7 +20,7 @@ public class AlertsMonitor {
         this.alert = new Alert(Alert.Type.HighTraffic);
     }
 
-    public void processAlert(StatsSummary statsSummary) {
+    public Optional<String> processAlert(@NonNull StatsSummary statsSummary) {
         statsSummariesWindow.offer(statsSummary);
 
         totalHistPerMonitoringSession += statsSummary.getTotalRequestCount();
@@ -28,18 +33,16 @@ public class AlertsMonitor {
             if (averageHitsPerMonitoringSession > threshold) {
                 if (!alert.getAlertSate().equals(Alert.State.Active)) {
                     alert.setAlertSate(Alert.State.Active);
-                    alert.trigger();
-                }
 
-                return;
+                    return Optional.of(alert.toString());
+                }
             }
 
             if (averageHitsPerMonitoringSession < threshold) {
                 if (alert.getAlertSate().equals(Alert.State.Active)) {
                     alert.setAlertSate(Alert.State.Recovered);
-                    alert.trigger();
 
-                    return;
+                    return Optional.of(alert.toString());
                 }
 
                 if (alert.getAlertSate().equals(Alert.State.Recovered)) {
@@ -47,5 +50,7 @@ public class AlertsMonitor {
                 }
             }
         }
+
+        return Optional.empty();
     }
 }

@@ -9,6 +9,7 @@ import org.datadog.monitoring.logs.LogsConsumer;
 import org.datadog.monitoring.logs.LogsProducer;
 import org.datadog.monitoring.stats.StatsConsumer;
 import org.datadog.monitoring.stats.StatsSummary;
+import org.datadog.monitoring.ui.OutputMessageConsumer;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MonitoringApplication {
         BlockingQueue<String> logsPipe = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<String> outputMessagesQueue = new LinkedBlockingQueue<>();
 
         TailerListener listener = new LogsProducer(logsPipe);
         // flog -o "/tmp/access.log" -t log -d 1 -w
@@ -38,18 +40,23 @@ public class MonitoringApplication {
         // and get all the logs we can in this x second timespan.
         executorService.scheduleAtFixedRate(logsConsumer, 5, 5, TimeUnit.SECONDS);
 
-        StatsConsumer statsConsumer = new StatsConsumer(logLinesQueue, statsSummariesQueue);
+        StatsConsumer statsConsumer = new StatsConsumer(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
         Thread statsConsumerThread = new Thread(statsConsumer);
         statsConsumerThread.start();
 
-        SimpleConsumer<StatsSummary> alertsConsumer = new AlertsConsumer(statsSummariesQueue, 10, 10);
+        SimpleConsumer<StatsSummary> alertsConsumer = new AlertsConsumer(statsSummariesQueue, outputMessagesQueue, 10, 10);
         Thread alertsThread = new Thread(alertsConsumer);
         alertsThread.start();
+
+        SimpleConsumer<String> messageConsumer = new OutputMessageConsumer(outputMessagesQueue);
+        Thread messagesThread = new Thread(messageConsumer);
+        messagesThread.start();
 
         try {
             logsProducerThread.join();
             statsConsumerThread.join();
             alertsThread.join();
+            messagesThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

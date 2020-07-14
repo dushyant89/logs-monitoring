@@ -7,16 +7,18 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 public class StatsConsumer extends SequentialConsumer<List<LogLine>, StatsSummary> {
+    BlockingQueue<String> outputQueue;
 
-    public StatsConsumer(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue) {
+    public StatsConsumer(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
         super(inputQueue, nextQueue);
+        this.outputQueue = outputQueue;
     }
 
     public void run() {
         while (true) {
             try {
                 StatsSummary statsSummary = prepareStatsSummary(inputQueue.take());
-                statsSummary.printSummary();
+                outputQueue.offer(statsSummary.toString());
                 // offer the summary for the next consumer.
                 next(statsSummary);
             } catch (InterruptedException e) {
@@ -39,7 +41,7 @@ public class StatsConsumer extends SequentialConsumer<List<LogLine>, StatsSummar
                 section = sectionParts[1];
             }
 
-            statsSummary.getSectionCount().compute(section, (k,v) -> {
+            statsSummary.getSectionWiseHits().compute(section, (k,v) -> {
                 if (v == null) {
                     return 1;
                 }
