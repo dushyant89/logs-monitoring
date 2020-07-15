@@ -10,7 +10,16 @@ public abstract class SequentialWorker<T,V> extends SimpleWorker<T> {
         this.nextQueue = nextQueue;
     }
 
-    public void next(V forNextQueue) {
+    public SequentialWorker(BlockingQueue<T> inputQueue, BlockingQueue<V> nextQueue, BlockingQueue<String> outputQueue) {
+        super(inputQueue, outputQueue);
+        this.nextQueue = nextQueue;
+    }
+
+    /**
+     *
+     * @param forNextQueue
+     */
+    protected void next(V forNextQueue) {
         nextQueue.offer(forNextQueue);
     }
 }

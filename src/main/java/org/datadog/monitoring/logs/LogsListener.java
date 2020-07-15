@@ -4,10 +4,10 @@ import org.apache.commons.io.input.TailerListenerAdapter;
 
 import java.util.concurrent.BlockingQueue;
 
-public class LogsProducer extends TailerListenerAdapter {
+public class LogsListener extends TailerListenerAdapter {
     BlockingQueue<String> logsProducer;
 
-    public LogsProducer(BlockingQueue<String> logsProducer) {
+    public LogsListener(BlockingQueue<String> logsProducer) {
         this.logsProducer = logsProducer;
     }
 

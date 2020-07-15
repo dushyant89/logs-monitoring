@@ -7,19 +7,16 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 public class LogLinesWorker extends SequentialWorker<List<LogLine>, StatsSummary> {
-    BlockingQueue<String> outputQueue;
 
     public LogLinesWorker(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
-        super(inputQueue, nextQueue);
-        this.outputQueue = outputQueue;
+        super(inputQueue, nextQueue, outputQueue);
     }
 
     public void run() {
         while (true) {
             try {
                 StatsSummary statsSummary = prepareStatsSummary(inputQueue.take());
-                outputQueue.offer(statsSummary.toString());
-                // offer the summary for the next worker.
+                handOutput(statsSummary.toString());
                 next(statsSummary);
             } catch (InterruptedException e) {
                 e.printStackTrace();

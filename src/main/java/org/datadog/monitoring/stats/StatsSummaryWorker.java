@@ -8,11 +8,9 @@ import java.util.concurrent.BlockingQueue;
 
 public class StatsSummaryWorker extends SimpleWorker<StatsSummary> {
     private final AlertsMonitor alertsMonitor;
-    private final BlockingQueue<String> outputQueue;
 
     public StatsSummaryWorker(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> outputQueue, int alertsWindowSize, int threshold) {
-        super(inputQueue);
-        this.outputQueue = outputQueue;
+        super(inputQueue, outputQueue);
         this.alertsMonitor = new AlertsMonitor(alertsWindowSize, threshold);
     }
 
@@ -20,7 +18,7 @@ public class StatsSummaryWorker extends SimpleWorker<StatsSummary> {
         while (true) {
             try {
                 Optional<String> alertOutput = alertsMonitor.processAlert(inputQueue.take());
-                alertOutput.ifPresent(outputQueue::offer);
+                alertOutput.ifPresent(this::handOutput);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

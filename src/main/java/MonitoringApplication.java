@@ -6,7 +6,7 @@ import org.datadog.monitoring.stats.StatsSummaryWorker;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
 import org.datadog.monitoring.logs.LogsWorker;
-import org.datadog.monitoring.logs.LogsProducer;
+import org.datadog.monitoring.logs.LogsListener;
 import org.datadog.monitoring.logs.LogLinesWorker;
 import org.datadog.monitoring.stats.StatsSummary;
 import org.datadog.monitoring.ui.OutputMessageWorker;
@@ -26,7 +26,7 @@ public class MonitoringApplication {
         BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<String> outputMessagesQueue = new LinkedBlockingQueue<>();
 
-        TailerListener listener = new LogsProducer(logsPipe);
+        TailerListener listener = new LogsListener(logsPipe);
         // flog -o "/tmp/access.log" -t log -d 1 -w
         // Tail the logs with minimum possible delays so that it doesn't hamper with the rate at which
         // the consumer is running.
