@@ -39,6 +39,7 @@ public class MonitoringApplication {
         // Run the consumer once every x seconds.
         // and get all the logs we can in this x second timespan.
         executorService.scheduleAtFixedRate(logsWorker, 5, 5, TimeUnit.SECONDS);
+        executorService.shutdown();
 
         SequentialWorker<List<LogLine>, StatsSummary> logLinesWorker = new LogLinesWorker(logLinesQueue, statsSummariesQueue, messagesQueue);
         Thread statsConsumerThread = new Thread(logLinesWorker);

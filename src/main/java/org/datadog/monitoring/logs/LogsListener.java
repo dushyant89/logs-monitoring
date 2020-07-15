@@ -1,9 +1,11 @@
 package org.datadog.monitoring.logs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.TailerListenerAdapter;
 
 import java.util.concurrent.BlockingQueue;
 
+@Slf4j
 public class LogsListener extends TailerListenerAdapter {
     BlockingQueue<String> logsProducer;
 
@@ -16,10 +18,10 @@ public class LogsListener extends TailerListenerAdapter {
     }
 
     public void fileNotFound() {
-        System.out.println("File not found");
+        log.warn("File not found");
     }
 
     public void handle(Exception ex) {
-        System.out.println(ex.getMessage());
+        log.warn(ex.getMessage());
     }
 }

@@ -2,6 +2,11 @@ package org.datadog.monitoring;
 
 import java.util.concurrent.BlockingQueue;
 
+/**
+ *
+ * @param <T>
+ * @param <V>
+ */
 public abstract class SequentialWorker<T,V> extends SimpleWorker<T> {
     protected BlockingQueue<V> nextQueue;
 

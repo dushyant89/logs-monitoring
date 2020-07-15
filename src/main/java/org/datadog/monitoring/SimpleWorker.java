@@ -2,6 +2,10 @@ package org.datadog.monitoring;
 
 import java.util.concurrent.BlockingQueue;
 
+/**
+ *
+ * @param <T>
+ */
 public abstract class SimpleWorker<T> implements Runnable {
     protected final BlockingQueue<T> inputQueue;
     protected BlockingQueue<String> messageQueue;
