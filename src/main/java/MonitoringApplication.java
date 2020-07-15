@@ -1,15 +1,15 @@
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
-import org.datadog.monitoring.SequentialConsumer;
-import org.datadog.monitoring.SimpleConsumer;
-import org.datadog.monitoring.stats.StatsSummaryConsumer;
+import org.datadog.monitoring.SequentialWorker;
+import org.datadog.monitoring.SimpleWorker;
+import org.datadog.monitoring.stats.StatsSummaryWorker;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
-import org.datadog.monitoring.logs.LogsConsumer;
+import org.datadog.monitoring.logs.LogsWorker;
 import org.datadog.monitoring.logs.LogsProducer;
-import org.datadog.monitoring.logs.LogLinesConsumer;
+import org.datadog.monitoring.logs.LogLinesWorker;
 import org.datadog.monitoring.stats.StatsSummary;
-import org.datadog.monitoring.ui.OutputMessageConsumer;
+import org.datadog.monitoring.ui.OutputMessageWorker;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -34,22 +34,22 @@ public class MonitoringApplication {
         Thread logsProducerThread = new Thread(tailer);
         logsProducerThread.start();
 
-        SequentialConsumer<String, List<LogLine>> logsConsumer = new LogsConsumer(logsPipe, logLinesQueue, new ApacheCommonLogsParser());
+        SequentialWorker<String, List<LogLine>> logsWorker = new LogsWorker(logsPipe, logLinesQueue, new ApacheCommonLogsParser());
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         // Run the consumer once every x seconds.
         // and get all the logs we can in this x second timespan.
-        executorService.scheduleAtFixedRate(logsConsumer, 5, 5, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(logsWorker, 5, 5, TimeUnit.SECONDS);
 
-        SequentialConsumer<List<LogLine>, StatsSummary> logLinesConsumer = new LogLinesConsumer(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
-        Thread statsConsumerThread = new Thread(logLinesConsumer);
+        SequentialWorker<List<LogLine>, StatsSummary> logLinesWorker = new LogLinesWorker(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
+        Thread statsConsumerThread = new Thread(logLinesWorker);
         statsConsumerThread.start();
 
-        SimpleConsumer<StatsSummary> statsSummaryConsumer = new StatsSummaryConsumer(statsSummariesQueue, outputMessagesQueue, 10, 10);
-        Thread alertsThread = new Thread(statsSummaryConsumer);
+        SimpleWorker<StatsSummary> statsSummaryWorker = new StatsSummaryWorker(statsSummariesQueue, outputMessagesQueue, 10, 10);
+        Thread alertsThread = new Thread(statsSummaryWorker);
         alertsThread.start();
 
-        SimpleConsumer<String> messageConsumer = new OutputMessageConsumer(outputMessagesQueue);
-        Thread messagesThread = new Thread(messageConsumer);
+        SimpleWorker<String> messageWorker = new OutputMessageWorker(outputMessagesQueue);
+        Thread messagesThread = new Thread(messageWorker);
         messagesThread.start();
 
         try {

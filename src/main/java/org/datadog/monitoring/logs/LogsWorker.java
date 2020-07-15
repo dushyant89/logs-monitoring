@@ -1,6 +1,6 @@
 package org.datadog.monitoring.logs;
 
-import org.datadog.monitoring.SequentialConsumer;
+import org.datadog.monitoring.SequentialWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class LogsConsumer extends SequentialConsumer<String, List<LogLine>> {
+public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
     LogsParser logsParser;
 
-    private static final Logger logger = LoggerFactory.getLogger(LogsConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogsWorker.class);
 
-    public LogsConsumer(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> nextQueue, LogsParser parser) {
+    public LogsWorker(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> nextQueue, LogsParser parser) {
         super(inputQueue, nextQueue);
         this.logsParser = parser;
     }
@@ -25,7 +25,7 @@ public class LogsConsumer extends SequentialConsumer<String, List<LogLine>> {
             incomingLogs.add(inputQueue.take());
             // Empty the queue for the next set of logs.
             inputQueue.drainTo(incomingLogs, inputQueue.size());
-            // offer the parsed logs to the output queue for the next consumer.
+            // offer the parsed logs to the output queue for the next worker.
             next(parseIncomingLogs(incomingLogs));
         } catch (InterruptedException e) {
             e.printStackTrace();

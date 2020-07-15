@@ -1,11 +1,11 @@
 package org.datadog.monitoring.ui;
 
-import org.datadog.monitoring.SimpleConsumer;
+import org.datadog.monitoring.SimpleWorker;
 
 import java.util.concurrent.BlockingQueue;
 
-public class OutputMessageConsumer extends SimpleConsumer<String> {
-    public OutputMessageConsumer(BlockingQueue<String> inputQueue) {
+public class OutputMessageWorker extends SimpleWorker<String> {
+    public OutputMessageWorker(BlockingQueue<String> inputQueue) {
         super(inputQueue);
     }
 
