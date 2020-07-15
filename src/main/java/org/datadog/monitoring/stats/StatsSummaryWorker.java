@@ -9,8 +9,8 @@ import java.util.concurrent.BlockingQueue;
 public class StatsSummaryWorker extends SimpleWorker<StatsSummary> {
     private final AlertsMonitor alertsMonitor;
 
-    public StatsSummaryWorker(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> outputQueue, int alertsWindowSize, int threshold) {
-        super(inputQueue, outputQueue);
+    public StatsSummaryWorker(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> messageQueue, int alertsWindowSize, int threshold) {
+        super(inputQueue, messageQueue);
         this.alertsMonitor = new AlertsMonitor(alertsWindowSize, threshold);
     }
 

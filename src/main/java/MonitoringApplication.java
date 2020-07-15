@@ -9,7 +9,7 @@ import org.datadog.monitoring.logs.LogsWorker;
 import org.datadog.monitoring.logs.LogsListener;
 import org.datadog.monitoring.logs.LogLinesWorker;
 import org.datadog.monitoring.stats.StatsSummary;
-import org.datadog.monitoring.ui.OutputMessageWorker;
+import org.datadog.monitoring.ui.PrintMessageWorker;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -24,7 +24,7 @@ public class MonitoringApplication {
         BlockingQueue<String> incomingLogsQueue = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
-        BlockingQueue<String> outputMessagesQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
 
         TailerListener listener = new LogsListener(incomingLogsQueue);
         // flog -o "/tmp/access.log" -t log -d 1 -w
@@ -40,15 +40,15 @@ public class MonitoringApplication {
         // and get all the logs we can in this x second timespan.
         executorService.scheduleAtFixedRate(logsWorker, 5, 5, TimeUnit.SECONDS);
 
-        SequentialWorker<List<LogLine>, StatsSummary> logLinesWorker = new LogLinesWorker(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
+        SequentialWorker<List<LogLine>, StatsSummary> logLinesWorker = new LogLinesWorker(logLinesQueue, statsSummariesQueue, messagesQueue);
         Thread statsConsumerThread = new Thread(logLinesWorker);
         statsConsumerThread.start();
 
-        SimpleWorker<StatsSummary> statsSummaryWorker = new StatsSummaryWorker(statsSummariesQueue, outputMessagesQueue, 10, 10);
+        SimpleWorker<StatsSummary> statsSummaryWorker = new StatsSummaryWorker(statsSummariesQueue, messagesQueue, 10, 10);
         Thread alertsThread = new Thread(statsSummaryWorker);
         alertsThread.start();
 
-        SimpleWorker<String> messageWorker = new OutputMessageWorker(outputMessagesQueue);
+        SimpleWorker<String> messageWorker = new PrintMessageWorker(messagesQueue);
         Thread messagesThread = new Thread(messageWorker);
         messagesThread.start();
 

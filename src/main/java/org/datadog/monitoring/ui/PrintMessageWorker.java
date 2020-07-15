@@ -4,8 +4,8 @@ import org.datadog.monitoring.SimpleWorker;
 
 import java.util.concurrent.BlockingQueue;
 
-public class OutputMessageWorker extends SimpleWorker<String> {
-    public OutputMessageWorker(BlockingQueue<String> inputQueue) {
+public class PrintMessageWorker extends SimpleWorker<String> {
+    public PrintMessageWorker(BlockingQueue<String> inputQueue) {
         super(inputQueue);
     }
 
