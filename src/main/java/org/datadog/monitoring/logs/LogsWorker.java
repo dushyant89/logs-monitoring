@@ -1,17 +1,15 @@
 package org.datadog.monitoring.logs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.datadog.monitoring.SequentialWorker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+@Slf4j
 public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
     LogsParser logsParser;
-
-    private static final Logger logger = LoggerFactory.getLogger(LogsWorker.class);
 
     public LogsWorker(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> nextQueue, LogsParser parser) {
         super(inputQueue, nextQueue);
@@ -39,7 +37,7 @@ public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
             try {
                 logLines.add(logsParser.parseLogs(incomingLog));
             } catch (LogsParsingException e) {
-                logger.info(String.format("Error parsing incoming log: %s with error: %s", incomingLog, e.getMessage()));
+                log.info(String.format("Error parsing incoming log: %s with error: %s", incomingLog, e.getMessage()));
             }
         }
 
