@@ -21,12 +21,12 @@ public class MonitoringApplication {
     }
 
     private static void createLogsTailerListener() {
-        BlockingQueue<String> logsPipe = new LinkedBlockingQueue<>();
+        BlockingQueue<String> incomingLogsQueue = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<String> outputMessagesQueue = new LinkedBlockingQueue<>();
 
-        TailerListener listener = new LogsListener(logsPipe);
+        TailerListener listener = new LogsListener(incomingLogsQueue);
         // flog -o "/tmp/access.log" -t log -d 1 -w
         // Tail the logs with minimum possible delays so that it doesn't hamper with the rate at which
         // the consumer is running.
@@ -34,7 +34,7 @@ public class MonitoringApplication {
         Thread logsProducerThread = new Thread(tailer);
         logsProducerThread.start();
 
-        SequentialWorker<String, List<LogLine>> logsWorker = new LogsWorker(logsPipe, logLinesQueue, new ApacheCommonLogsParser());
+        SequentialWorker<String, List<LogLine>> logsWorker = new LogsWorker(incomingLogsQueue, logLinesQueue, new ApacheCommonLogsParser());
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         // Run the consumer once every x seconds.
         // and get all the logs we can in this x second timespan.
