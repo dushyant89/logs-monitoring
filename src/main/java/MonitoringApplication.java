@@ -40,12 +40,12 @@ public class MonitoringApplication {
         // and get all the logs we can in this x second timespan.
         executorService.scheduleAtFixedRate(logsConsumer, 5, 5, TimeUnit.SECONDS);
 
-        LogLinesConsumer logLinesConsumer = new LogLinesConsumer(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
+        SequentialConsumer<List<LogLine>, StatsSummary> logLinesConsumer = new LogLinesConsumer(logLinesQueue, statsSummariesQueue, outputMessagesQueue);
         Thread statsConsumerThread = new Thread(logLinesConsumer);
         statsConsumerThread.start();
 
-        SimpleConsumer<StatsSummary> alertsConsumer = new StatsSummaryConsumer(statsSummariesQueue, outputMessagesQueue, 10, 10);
-        Thread alertsThread = new Thread(alertsConsumer);
+        SimpleConsumer<StatsSummary> statsSummaryConsumer = new StatsSummaryConsumer(statsSummariesQueue, outputMessagesQueue, 10, 10);
+        Thread alertsThread = new Thread(statsSummaryConsumer);
         alertsThread.start();
 
         SimpleConsumer<String> messageConsumer = new OutputMessageConsumer(outputMessagesQueue);

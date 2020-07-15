@@ -18,20 +18,6 @@ public class LogsConsumer extends SequentialConsumer<String, List<LogLine>> {
         this.logsParser = parser;
     }
 
-    private List<LogLine> parseIncomingLogs(List<String> incomingLogs) {
-        List<LogLine> logLines = new ArrayList<>();
-
-        for (String incomingLog: incomingLogs) {
-            try {
-                logLines.add(logsParser.parseLogs(incomingLog));
-            } catch (LogsParsingException e) {
-                logger.info(String.format("Error parsing incoming log: %s with error: %s", incomingLog, e.getMessage()));
-            }
-        }
-
-        return logLines;
-    }
-
     public void run() {
         try {
             List<String> incomingLogs = new ArrayList<>();
@@ -44,5 +30,19 @@ public class LogsConsumer extends SequentialConsumer<String, List<LogLine>> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<LogLine> parseIncomingLogs(List<String> incomingLogs) {
+        List<LogLine> logLines = new ArrayList<>();
+
+        for (String incomingLog: incomingLogs) {
+            try {
+                logLines.add(logsParser.parseLogs(incomingLog));
+            } catch (LogsParsingException e) {
+                logger.info(String.format("Error parsing incoming log: %s with error: %s", incomingLog, e.getMessage()));
+            }
+        }
+
+        return logLines;
     }
 }
