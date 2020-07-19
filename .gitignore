@@ -9,4 +9,4 @@
 target
 
 # Log file
-application.log
+*.log
