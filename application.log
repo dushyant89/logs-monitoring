@@ -1,1 +1,3 @@
-18:28:06.806 [main] INFO  MonitoringApplication - starting workers
+18:28:06.806 [main] INFO  org.datadog.monitoring.MonitoringApplication - starting workers
+18:36:34.468 [main] TRACE org.datadog.monitoring.MonitoringApplication - setting up workers
+18:40:58.767 [main] TRACE org.datadog.monitoring.MonitoringApplication - setting up workers

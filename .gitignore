@@ -7,3 +7,6 @@
 
 # Compiled java files
 target
+
+# Log file
+application.*
