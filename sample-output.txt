@@ -1,0 +1,279 @@
+MonitoringApplication -f /tmp/access.log -s 5 -a 60 -r 9
+
+****** Traffic stats  ******
+Total requests served: 9
+Total content size: 44 KB
+Top 5 sections by hits:
+	app -> 2
+	explore -> 1
+	wp-content -> 3
+	posts -> 1
+	wp-admin -> 1
+HTTP Methods by hits:
+	DELETE -> 1
+	GET -> 5
+	PUT -> 2
+	POST -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 12
+Total content size: 59 KB
+Top 5 sections by hits:
+	app -> 1
+	explore -> 2
+	wp-content -> 2
+	posts -> 2
+	wp-admin -> 3
+HTTP Methods by hits:
+	DELETE -> 3
+	GET -> 7
+	PUT -> 1
+	POST -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 10
+Total content size: 49 KB
+Top 5 sections by hits:
+	search -> 1
+	explore -> 1
+	wp-content -> 1
+	list -> 2
+	apps -> 3
+HTTP Methods by hits:
+	GET -> 9
+	PUT -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 8
+Total content size: 39 KB
+Top 5 sections by hits:
+	app -> 2
+	explore -> 2
+	posts -> 1
+	wp-admin -> 2
+	apps -> 1
+HTTP Methods by hits:
+	DELETE -> 1
+	GET -> 6
+	PUT -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 12
+Total content size: 59 KB
+Top 5 sections by hits:
+	app -> 2
+	explore -> 2
+	wp-content -> 2
+	list -> 2
+	posts -> 2
+HTTP Methods by hits:
+	DELETE -> 1
+	GET -> 7
+	PUT -> 2
+	POST -> 2
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 9
+Total content size: 44 KB
+Top 5 sections by hits:
+	app -> 3
+	search -> 2
+	explore -> 1
+	wp-content -> 2
+	apps -> 1
+HTTP Methods by hits:
+	DELETE -> 2
+	GET -> 5
+	PUT -> 1
+	POST -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 9
+Total content size: 44 KB
+Top 5 sections by hits:
+	search -> 1
+	explore -> 2
+	wp-content -> 2
+	list -> 2
+	posts -> 1
+HTTP Methods by hits:
+	DELETE -> 3
+	GET -> 3
+	PUT -> 3
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 10
+Total content size: 49 KB
+Top 5 sections by hits:
+	app -> 4
+	search -> 1
+	explore -> 1
+	wp-admin -> 4
+HTTP Methods by hits:
+	DELETE -> 1
+	GET -> 6
+	PUT -> 3
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 9
+Total content size: 44 KB
+Top 5 sections by hits:
+	app -> 3
+	explore -> 1
+	posts -> 1
+	wp-admin -> 3
+	apps -> 1
+HTTP Methods by hits:
+	DELETE -> 1
+	GET -> 7
+	PUT -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 12
+Total content size: 59 KB
+Top 5 sections by hits:
+	app -> 2
+	search -> 2
+	explore -> 2
+	wp-content -> 2
+	list -> 2
+HTTP Methods by hits:
+	GET -> 5
+	PUT -> 4
+	POST -> 3
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 11
+Total content size: 54 KB
+Top 5 sections by hits:
+	app -> 2
+	search -> 2
+	list -> 2
+	posts -> 2
+	wp-admin -> 2
+HTTP Methods by hits:
+	DELETE -> 2
+	GET -> 9
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 11
+Total content size: 54 KB
+Top 5 sections by hits:
+	app -> 2
+	wp-content -> 2
+	list -> 2
+	wp-admin -> 2
+	apps -> 2
+HTTP Methods by hits:
+	DELETE -> 1
+	GET -> 7
+	PUT -> 3
+****** End of traffic stats ******
+
+	!!! A High traffic alert is now Active !!!
+
+****** Traffic stats  ******
+Total requests served: 7
+Total content size: 34 KB
+Top 5 sections by hits:
+	search -> 2
+	explore -> 3
+	posts -> 1
+	wp-admin -> 1
+HTTP Methods by hits:
+	DELETE -> 2
+	GET -> 3
+	PUT -> 2
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 5
+Total content size: 24 KB
+Top 5 sections by hits:
+	app -> 1
+	search -> 1
+	list -> 1
+	posts -> 1
+	wp-admin -> 1
+HTTP Methods by hits:
+	DELETE -> 2
+	GET -> 3
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 5
+Total content size: 24 KB
+Top 5 sections by hits:
+	explore -> 2
+	wp-content -> 1
+	list -> 1
+	apps -> 1
+HTTP Methods by hits:
+	GET -> 4
+	PUT -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 5
+Total content size: 24 KB
+Top 5 sections by hits:
+	explore -> 1
+	posts -> 1
+	wp-admin -> 2
+	apps -> 1
+HTTP Methods by hits:
+	DELETE -> 1
+	GET -> 3
+	PUT -> 1
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 6
+Total content size: 29 KB
+Top 5 sections by hits:
+	app -> 1
+	search -> 1
+	wp-content -> 2
+	wp-admin -> 1
+	apps -> 1
+HTTP Methods by hits:
+	GET -> 3
+	PUT -> 1
+	POST -> 2
+****** End of traffic stats ******
+
+	!!! A High traffic alert is now Recovered !!!
+
+****** Traffic stats  ******
+Total requests served: 4
+Total content size: 19 KB
+Top 5 sections by hits:
+	search -> 1
+	explore -> 2
+	wp-admin -> 1
+HTTP Methods by hits:
+	GET -> 2
+	PUT -> 2
+****** End of traffic stats ******
+
+****** Traffic stats  ******
+Total requests served: 3
+Total content size: 15 KB
+Top 5 sections by hits:
+	app -> 2
+	posts -> 1
+HTTP Methods by hits:
+	GET -> 1
+	PUT -> 2
+****** End of traffic stats ******
