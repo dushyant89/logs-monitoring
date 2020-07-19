@@ -1,9 +1,8 @@
+package org.datadog.monitoring;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
-import org.datadog.monitoring.ApplicationConfig;
-import org.datadog.monitoring.SequentialWorker;
-import org.datadog.monitoring.SimpleWorker;
 import org.datadog.monitoring.stats.StatsSummaryWorker;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
@@ -55,7 +54,8 @@ public class MonitoringApplication {
     }
 
     private void setupWorkers(ApplicationConfig appConfig) {
-        log.info("starting workers");
+        log.trace("setting up workers");
+
         BlockingQueue<String> incomingLogsQueue = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
@@ -94,6 +94,8 @@ public class MonitoringApplication {
 
         Thread messagesThread = new Thread(messageWorker);
 
+        log.trace("starting worker threads");
+
         logsProducerThread.start();
         statsConsumerThread.start();
         alertsThread.start();
@@ -104,7 +106,7 @@ public class MonitoringApplication {
             alertsThread.join();
             messagesThread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("Workers got interrupted", e);
         }
 
         executorService.shutdown();
