@@ -23,6 +23,12 @@ public class StatsSummary {
 
     private static final int numberOfTopSections = 5;
 
+    public StatsSummary() { }
+
+    public StatsSummary(int totalRequestCount) {
+        this.totalRequestCount = totalRequestCount;
+    }
+
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();

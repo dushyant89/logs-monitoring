@@ -26,7 +26,7 @@ public class AlertsMonitor {
         totalHitsPerMonitoringSession += statsSummary.getTotalRequestCount();
 
         if (statsSummariesWindow.isAtFullCapacity()) {
-            int averageHitsPerMonitoringSession = Math.round((float) totalHitsPerMonitoringSession / statsSummariesWindow.maxSize());
+            int averageHitsPerMonitoringSession = Math.round((float) totalHitsPerMonitoringSession / (float) statsSummariesWindow.maxSize());
 
             totalHitsPerMonitoringSession -= statsSummariesWindow.remove().getTotalRequestCount();
 
@@ -38,7 +38,7 @@ public class AlertsMonitor {
                 }
             }
 
-            if (averageHitsPerMonitoringSession < threshold) {
+            if (averageHitsPerMonitoringSession <= threshold) {
                 if (alert.getAlertSate().equals(Alert.State.Active)) {
                     alert.setAlertSate(Alert.State.Recovered);
 
