@@ -90,7 +90,7 @@ public class ApplicationConfigUtil {
     private int getValidatedStatsInterval(String statsIntervalOption) {
         try {
             int statsDisplayInterval = Integer.parseInt(statsIntervalOption);
-            if (statsDisplayInterval < 1) { // @TODO: add minimum interval check
+            if (statsDisplayInterval <= 0) { // @TODO: add minimum interval check
                 throw new IllegalArgumentException(
                     String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.StatsInterval.getVerboseName(), statsIntervalOption)
                 );
@@ -128,7 +128,7 @@ public class ApplicationConfigUtil {
     private int getValidatedRPSThreshold(String RPSThresholdOption) {
         try {
             int RPSThreshold = Integer.parseInt(RPSThresholdOption);
-            if (RPSThreshold < 1) {
+            if (RPSThreshold <= 0) {
                 throw new IllegalArgumentException(
                     String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.RPSThreshold.getVerboseName(), RPSThresholdOption)
                 );
