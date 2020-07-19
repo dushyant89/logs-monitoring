@@ -7,7 +7,7 @@ public enum ApplicationConfigOptions {
     FileLocation("f", "file-location", "location of the log file"),
     StatsInterval("s", "stats-interval", "time interval after which stats will be displayed"),
     AlertsInterval("a", "alerts-interval", "length of the time window for monitoring the alerts"),
-    MaxRPS("r", "max-rps", "Max RPS after which alert will fire");
+    RPSThreshold("r", "max-rps", "RPS threshold after which alert will fire");
 
     @Getter
     private final String shortName;

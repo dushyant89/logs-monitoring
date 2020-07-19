@@ -10,7 +10,7 @@ import java.util.Optional;
 @Data
 public class AlertsMonitor {
     private final CircularFifoQueue<StatsSummary> statsSummariesWindow;
-    private int totalHistPerMonitoringSession;
+    private int totalHitsPerMonitoringSession;
     private final int threshold;
     private Alert alert;
 
@@ -23,12 +23,12 @@ public class AlertsMonitor {
     public Optional<String> processAlert(@NonNull StatsSummary statsSummary) {
         statsSummariesWindow.offer(statsSummary);
 
-        totalHistPerMonitoringSession += statsSummary.getTotalRequestCount();
+        totalHitsPerMonitoringSession += statsSummary.getTotalRequestCount();
 
         if (statsSummariesWindow.isAtFullCapacity()) {
-            int averageHitsPerMonitoringSession = Math.round((float) totalHistPerMonitoringSession / statsSummariesWindow.maxSize());
+            int averageHitsPerMonitoringSession = Math.round((float) totalHitsPerMonitoringSession / statsSummariesWindow.maxSize());
 
-            totalHistPerMonitoringSession -= statsSummariesWindow.remove().getTotalRequestCount();
+            totalHitsPerMonitoringSession -= statsSummariesWindow.remove().getTotalRequestCount();
 
             if (averageHitsPerMonitoringSession > threshold) {
                 if (!alert.getAlertSate().equals(Alert.State.Active)) {
