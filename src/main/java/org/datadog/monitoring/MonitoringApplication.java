@@ -10,7 +10,7 @@ import org.datadog.monitoring.logs.LogsListener;
 import org.datadog.monitoring.logs.LogLinesWorker;
 import org.datadog.monitoring.stats.StatsSummary;
 import org.datadog.monitoring.ui.PrintMessageWorker;
-import org.datadog.monitoring.utils.ApplicationUtil;
+import org.datadog.monitoring.utils.ApplicationConfigUtil;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.concurrent.*;
 @Slf4j
 public class MonitoringApplication {
     public static void main(String[] args) {
-        Optional<ApplicationConfig> applicationConfigOptional = ApplicationUtil.validateUserProvidedArgs(args);
+        Optional<ApplicationConfig> applicationConfigOptional = ApplicationConfigUtil.validateUserProvidedArgs(args);
         if (applicationConfigOptional.isEmpty()) {
             System.exit(1);
         }

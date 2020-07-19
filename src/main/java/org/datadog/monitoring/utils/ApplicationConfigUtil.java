@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @UtilityClass
 @Slf4j
-public class ApplicationUtil {
+public class ApplicationConfigUtil {
     private final Options options;
     private final CommandLineParser parser = new DefaultParser();
     private final String INVALID_ARGUMENT_VALUE = "Invalid %s argument value: %s";
@@ -24,6 +24,11 @@ public class ApplicationUtil {
                 .addOption(ApplicationConfigOptions.RPSThreshold.getCliOption());
     }
 
+    /**
+     * Parses user provided args, validates them and builds the ApplicationConfig
+     * @param args
+     * @return On successful parsing and validation returns the ApplicationConfig
+     */
     public Optional<ApplicationConfig> validateUserProvidedArgs(String []args) {
         Optional<CommandLine> commandLineOptional = parseUserArgs(args);
 
@@ -74,7 +79,9 @@ public class ApplicationUtil {
 
     private String getValidatedLogFileLocation(String logFileLocationOption) {
         if (!Paths.get(logFileLocationOption).toFile().isFile()) {
-            throw new IllegalArgumentException(String.format("Location `%s` should be a valid file location", logFileLocationOption));
+            throw new IllegalArgumentException(
+                String.format("Location `%s` should be a valid file location", logFileLocationOption)
+            );
         }
 
         return logFileLocationOption;
@@ -84,12 +91,16 @@ public class ApplicationUtil {
         try {
             int statsDisplayInterval = Integer.parseInt(statsIntervalOption);
             if (statsDisplayInterval < 1) { // @TODO: add minimum interval check
-                throw new IllegalArgumentException(String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.StatsInterval.getVerboseName(), statsIntervalOption));
+                throw new IllegalArgumentException(
+                    String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.StatsInterval.getVerboseName(), statsIntervalOption)
+                );
             }
 
             return statsDisplayInterval;
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.StatsInterval.getVerboseName(), statsIntervalOption));
+            throw new IllegalArgumentException(
+                String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.StatsInterval.getVerboseName(), statsIntervalOption)
+            );
         }
     }
 
@@ -98,16 +109,19 @@ public class ApplicationUtil {
             int alertsMonitoringInterval = Integer.parseInt(alertsIntervalOption);
             if (alertsMonitoringInterval < statsDisplayInterval) {
                 throw new IllegalArgumentException(
-                        String.format(
-                                "%s cannot be less than %s",
-                                ApplicationConfigOptions.AlertsInterval.getVerboseName(),
-                                ApplicationConfigOptions.StatsInterval.getVerboseName()
-                        ));
+                    String.format(
+                        "%s cannot be less than %s",
+                        ApplicationConfigOptions.AlertsInterval.getVerboseName(),
+                        ApplicationConfigOptions.StatsInterval.getVerboseName()
+                    )
+                );
             }
 
             return alertsMonitoringInterval;
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.AlertsInterval.getVerboseName(), alertsIntervalOption));
+            throw new IllegalArgumentException(
+                String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.AlertsInterval.getVerboseName(), alertsIntervalOption)
+            );
         }
     }
 
@@ -115,12 +129,16 @@ public class ApplicationUtil {
         try {
             int RPSThreshold = Integer.parseInt(RPSThresholdOption);
             if (RPSThreshold < 1) {
-                throw new IllegalArgumentException(String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.RPSThreshold.getVerboseName(), RPSThresholdOption));
+                throw new IllegalArgumentException(
+                    String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.RPSThreshold.getVerboseName(), RPSThresholdOption)
+                );
             }
 
             return RPSThreshold;
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.RPSThreshold.getVerboseName(), RPSThresholdOption));
+            throw new IllegalArgumentException(
+                String.format(INVALID_ARGUMENT_VALUE, ApplicationConfigOptions.RPSThreshold.getVerboseName(), RPSThresholdOption)
+            );
         }
     }
 }
