@@ -1,3 +1,4 @@
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 import org.datadog.monitoring.ApplicationConfig;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.*;
 
+@Slf4j
 public class MonitoringApplication {
     /**
      *
@@ -53,6 +55,7 @@ public class MonitoringApplication {
     }
 
     private void setupWorkers(ApplicationConfig appConfig) {
+        log.info("starting workers");
         BlockingQueue<String> incomingLogsQueue = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
