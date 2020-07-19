@@ -34,7 +34,7 @@ public class AlertsMonitorTest {
     public void testAlertResultWhenWindowIsFull() {
         Optional<String> processAlertResult;
 
-        addStatsSummaries(4, ALERTS_THRESHOLD);
+        addStatsSummaries(ALERTS_WINDOW_SIZE - 1, ALERTS_THRESHOLD);
 
         // The average requests will be over the threshold
         processAlertResult = alertsMonitor.processAlert(new StatsSummary(ALERTS_THRESHOLD + ALERTS_WINDOW_SIZE));
@@ -44,7 +44,7 @@ public class AlertsMonitorTest {
     @Test
     public void testAlertIsRecovered() {
         Optional<String> processAlertResult;
-        addStatsSummaries(5, 11);
+        addStatsSummaries(ALERTS_WINDOW_SIZE, ALERTS_THRESHOLD + 1);
 
         Assertions.assertEquals(alertsMonitor.getAlert().getAlertSate(), Alert.State.Active);
         // bring the moving average below the threshold
@@ -56,11 +56,11 @@ public class AlertsMonitorTest {
     @Test
     public void testAlertIsInActiveFromRecovered() {
         Optional<String> processAlertResult;
-        addStatsSummaries(5, 11);
+        addStatsSummaries(ALERTS_WINDOW_SIZE, ALERTS_THRESHOLD + 1);
 
         Assertions.assertEquals(alertsMonitor.getAlert().getAlertSate(), Alert.State.Active);
         // bring the moving average below the threshold
-        processAlertResult = alertsMonitor.processAlert(new StatsSummary(ALERTS_THRESHOLD - 5));
+        processAlertResult = alertsMonitor.processAlert(new StatsSummary(ALERTS_THRESHOLD - ALERTS_WINDOW_SIZE));
         Assertions.assertTrue(processAlertResult.isPresent());
         Assertions.assertEquals(alertsMonitor.getAlert().getAlertSate(), Alert.State.Recovered);
 
