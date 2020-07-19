@@ -12,11 +12,13 @@ public class PrintMessageWorker extends SimpleWorker<String> {
     }
 
     public void run() {
+        log.trace("PrintMessageWorker starting to run");
+
         while (true) {
             try {
                 System.out.println(inputQueue.take());
             } catch (InterruptedException e) {
-                log.warn("PrintMessageWorker is interrupted", e);
+                log.warn("PrintMessageWorker got interrupted", e);
             }
         }
     }

@@ -1,11 +1,13 @@
 package org.datadog.monitoring.logs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.datadog.monitoring.SequentialWorker;
 import org.datadog.monitoring.stats.StatsSummary;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+@Slf4j
 public class LogLinesWorker extends SequentialWorker<List<LogLine>, StatsSummary> {
 
     public LogLinesWorker(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
@@ -13,13 +15,15 @@ public class LogLinesWorker extends SequentialWorker<List<LogLine>, StatsSummary
     }
 
     public void run() {
+        log.trace("LogLinesWorker starting to run");
+
         while (true) {
             try {
                 StatsSummary statsSummary = prepareStatsSummary(inputQueue.take());
                 handOutput(statsSummary.toString());
                 next(statsSummary);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.warn("LogLinesWorker got interrupted", e);
             }
         }
     }

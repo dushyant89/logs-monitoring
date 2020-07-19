@@ -7,3 +7,13 @@
 19:04:16.796 [main] TRACE o.d.monitoring.MonitoringApplication - starting worker threads
 19:04:26.800 [pool-1-thread-1] TRACE o.datadog.monitoring.logs.LogsWorker - Logs worker starting to run
 19:04:36.802 [pool-1-thread-1] TRACE o.datadog.monitoring.logs.LogsWorker - Logs worker starting to run
+19:40:57.034 [main] TRACE o.d.monitoring.MonitoringApplication - starting workers
+19:40:57.044 [pool-2-thread-2] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.logs.LogLinesWorker starting to run
+19:40:57.047 [pool-2-thread-3] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.stats.StatsSummaryWorker starting to run
+19:40:57.048 [pool-2-thread-4] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.ui.PrintMessageWorker starting to run
+19:41:07.043 [pool-1-thread-1] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.logs.LogsWorker starting to run
+19:41:17.044 [pool-1-thread-1] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.logs.LogsWorker starting to run
+19:41:27.046 [pool-1-thread-1] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.logs.LogsWorker starting to run
+19:41:37.046 [pool-1-thread-1] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.logs.LogsWorker starting to run
+19:41:47.044 [pool-1-thread-1] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.logs.LogsWorker starting to run
+19:41:57.046 [pool-1-thread-1] TRACE org.datadog.monitoring.SimpleWorker - org.datadog.monitoring.logs.LogsWorker starting to run

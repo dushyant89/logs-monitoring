@@ -56,7 +56,11 @@ public class MonitoringApplication {
                     0,
                     true)
             );
-            executableWorkers.submit(new LogLinesWorker(logLinesQueue, statsSummariesQueue, messagesQueue));
+            executableWorkers.submit(new LogLinesWorker(
+                    logLinesQueue,
+                    statsSummariesQueue,
+                    messagesQueue)
+            );
             executableWorkers.submit(new StatsSummaryWorker(
                     statsSummariesQueue,
                     messagesQueue,

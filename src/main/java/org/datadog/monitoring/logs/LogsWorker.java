@@ -17,6 +17,8 @@ public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
     }
 
     public void run() {
+        log.trace("LogsWorker starting to run");
+
         try {
             List<String> incomingLogs = new ArrayList<>();
             // wait for the new set of incoming logs.
@@ -26,7 +28,7 @@ public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
             // offer the parsed logs to the output queue for the next worker.
             next(parseIncomingLogs(incomingLogs));
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.warn("LogsWorker got interrupted", e);
         }
     }
 
