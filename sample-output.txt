@@ -1,4 +1,4 @@
-MonitoringApplication -f /tmp/access.log -s 5 -a 60 -r 9
+org.datadog.monitoring.MonitoringApplication -f /tmp/access.log -s 5 -a 60 -r 9
 
 ****** Traffic stats  ******
 Total requests served: 9
