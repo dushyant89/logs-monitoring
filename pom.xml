@@ -7,6 +7,9 @@
     <groupId>org.datadog</groupId>
     <artifactId>datadog-monitoring</artifactId>
     <version>1.0.0</version>
+    <properties>
+        <exec.mainClass>org.datadog.monitoring.MonitoringApplication</exec.mainClass>
+    </properties>
     <build>
         <plugins>
             <plugin>
