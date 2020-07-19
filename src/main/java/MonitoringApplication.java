@@ -19,52 +19,82 @@ import java.util.Optional;
 import java.util.concurrent.*;
 
 public class MonitoringApplication {
+    /**
+     *
+     */
+    Tailer tailer;
+    /**
+     *
+     */
+    SequentialWorker<String, List<LogLine>> logsWorker;
+    /**
+     *
+     */
+    SequentialWorker<List<LogLine>, StatsSummary> logLinesWorker;
+    /**
+     *
+     */
+    SimpleWorker<StatsSummary> statsSummaryWorker;
+    /**
+     *
+     */
+    SimpleWorker<String> messageWorker;
+
     public static void main(String[] args) {
         Optional<ApplicationConfig> applicationConfigOptional = ApplicationUtil.validateUserProvidedArgs(args);
         if (applicationConfigOptional.isEmpty()) {
             System.exit(1);
         }
 
-        startWorkers(applicationConfigOptional.get());
+        MonitoringApplication  application = new MonitoringApplication();
+
+        application.setupWorkers(applicationConfigOptional.get());
+        application.startWorkers(applicationConfigOptional.get());
     }
 
-    private static void startWorkers(ApplicationConfig appConfig) {
+    private void setupWorkers(ApplicationConfig appConfig) {
         BlockingQueue<String> incomingLogsQueue = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
         BlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
 
         TailerListener listener = new LogsListener(incomingLogsQueue);
-        // flog -o "/tmp/access.log" -t log -d 1 -w
+
         // Tail the logs with minimum possible delays so that it doesn't hamper with the rate at which
         // the consumer is running.
-        Tailer tailer = new Tailer(Paths.get(appConfig.getLogFileLocation()).toFile(), listener, 1, true);
-        Thread logsProducerThread = new Thread(tailer);
-        logsProducerThread.start();
+        tailer = new Tailer(Paths.get(appConfig.getLogFileLocation()).toFile(), listener, 1, true);
 
-        SequentialWorker<String, List<LogLine>> logsWorker = new LogsWorker(incomingLogsQueue, logLinesQueue, new ApacheCommonLogsParser());
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        // Run the consumer once every x seconds.
-        // and get all the logs we can in this x second timespan.
-        executorService.scheduleAtFixedRate(logsWorker, appConfig.getStatsDisplayInterval(), appConfig.getStatsDisplayInterval(), TimeUnit.SECONDS);
+        logsWorker = new LogsWorker(incomingLogsQueue, logLinesQueue, new ApacheCommonLogsParser());
 
-        SequentialWorker<List<LogLine>, StatsSummary> logLinesWorker = new LogLinesWorker(logLinesQueue, statsSummariesQueue, messagesQueue);
-        Thread statsConsumerThread = new Thread(logLinesWorker);
-        statsConsumerThread.start();
+        logLinesWorker = new LogLinesWorker(logLinesQueue, statsSummariesQueue, messagesQueue);
 
-        SimpleWorker<StatsSummary> statsSummaryWorker = new StatsSummaryWorker(
+        statsSummaryWorker = new StatsSummaryWorker(
                 statsSummariesQueue,
                 messagesQueue,
                 appConfig.getAlertsMonitoringInterval() / appConfig.getStatsDisplayInterval(),
                 appConfig.getRequestsPerSecondThreshold()
         );
+
+        messageWorker = new PrintMessageWorker(messagesQueue);
+    }
+
+    private void startWorkers(ApplicationConfig appConfig) {
+        Thread logsProducerThread = new Thread(tailer);
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        executorService.scheduleAtFixedRate(logsWorker, appConfig.getStatsDisplayInterval(), appConfig.getStatsDisplayInterval(), TimeUnit.SECONDS);
+
+        Thread statsConsumerThread = new Thread(logLinesWorker);
+
         Thread alertsThread = new Thread(statsSummaryWorker);
-        alertsThread.start();
 
-        SimpleWorker<String> messageWorker = new PrintMessageWorker(messagesQueue);
         Thread messagesThread = new Thread(messageWorker);
-        messagesThread.start();
 
+        logsProducerThread.start();
+        statsConsumerThread.start();
+        alertsThread.start();
+        messagesThread.start();
         try {
             logsProducerThread.join();
             statsConsumerThread.join();
@@ -73,5 +103,7 @@ public class MonitoringApplication {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        executorService.shutdown();
     }
 }
