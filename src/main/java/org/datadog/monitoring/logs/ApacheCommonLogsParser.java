@@ -19,23 +19,17 @@ public class ApacheCommonLogsParser implements LogsParser {
             throw new LogsParsingException("Log format not recognizable");
         }
 
-        try {
-            return LogLine
-                    .builder()
-                    .host(matcher.group(1))
-                    .user(matcher.group(2))
-                    .userId(matcher.group(3))
-                    .dateTime(DateTimeUtil.getZonedDateTime(matcher.group(4)))
-                    .httpMethod(HttpMethod.getHttpMethod(matcher.group(5)).orElse(HttpMethod.OTHER))
-                    .requestPath(matcher.group(6))
-                    .httpVersion(matcher.group(7))
-                    .statusCode(Integer.parseInt(matcher.group(8)))
-                    .contentLength(Integer.parseInt(matcher.group(9)))
-                    .build();
-        } catch (Exception e) {
-            log.info(String.format("Error parsing log line: %s", e.getMessage()));
-        }
-
-        throw new LogsParsingException("Invalid log format");
+        return LogLine
+                .builder()
+                .host(matcher.group(1))
+                .user(matcher.group(2))
+                .userId(matcher.group(3))
+                .dateTime(DateTimeUtil.getZonedDateTime(matcher.group(4)))
+                .httpMethod(HttpMethod.getHttpMethod(matcher.group(5)).orElse(HttpMethod.OTHER))
+                .requestPath(matcher.group(6))
+                .httpVersion(matcher.group(7))
+                .statusCode(Integer.parseInt(matcher.group(8)))
+                .contentLength(Integer.parseInt(matcher.group(9)))
+                .build();
     }
 }
