@@ -37,7 +37,7 @@ public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
             try {
                 logLines.add(logsParser.parseLogs(incomingLog));
             } catch (LogsParsingException e) {
-                log.info(String.format("Error parsing incoming log: %s with error: %s", incomingLog, e.getMessage()));
+                log.info(String.format("Error parsing incoming log: %s", incomingLog));
             }
         }
 
