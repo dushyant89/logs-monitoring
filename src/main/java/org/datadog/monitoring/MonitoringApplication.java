@@ -27,10 +27,10 @@ public class MonitoringApplication {
             System.exit(1);
         }
 
-        new MonitoringApplication().startWorkers(applicationConfigOptional.get());
+        startWorkers(applicationConfigOptional.get());
     }
 
-    private void startWorkers(ApplicationConfig appConfig) {
+    private static void startWorkers(ApplicationConfig appConfig) {
         log.trace("starting workers");
 
         BlockingQueue<String> incomingLogsQueue = new LinkedBlockingQueue<>();
