@@ -38,7 +38,7 @@ The application during its execution logs information from logging levels rangin
 ![App Architecture](app-architecture.png)
 
 * The application is composed of several workers which are started by the main class i.e. `MonitoringApplication`. 
-* Each worker is based on `single responsibility` principle.
+* Each worker is based on the `single responsibility` principle.
 * The workers are connected by unbounded FIFO queues (represented by thick arrow). The work output of a worker can be handed to the next worker in the sequence.
 * Workers which operate in a sequence act as `producer` & `consumer` respectively for e.g. `LogsParserWorker` is a producer which gives parsed logs to the `TrafficSummaryGeneratorWorker`.
 * If a worker's output need to be displayed to the user they use the `PrintMessageWorker` which currently simple logs to the console.
@@ -57,7 +57,8 @@ The application will keep running unless the user quits the application.
 * Building a nice UI to show the traffic summary and alerts, currently everything goes to the console and you need to scroll to see any previous alerts which were active or recovered.
 * Implementing more log formats like `Combined Log Format`, `Extended Log File Format` etc. but any new format can be added easily by implementing the  `LogsParser` interface.
 * Adding more alert monitors for e.g. `LowTrafficAlertsMonitor` when the traffic drops below a specific moving average.
-* There is no persistance for the traffic summary and alerts we are generating. Connecting to a high throughput datastore like `Cassandra` will be good.
+* There is no persistance for the traffic summary and alerts that we are generate. Connecting to a high throughput datastore like `Cassandra` will be good.
+* Improving the test coverage, couldn't add more tests due to time constraints.
 
 ## Sample output
 

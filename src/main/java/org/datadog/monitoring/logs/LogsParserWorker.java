@@ -23,9 +23,9 @@ public class LogsParserWorker extends ProducerConsumerWorker<String, List<LogLin
             List<String> incomingLogs = new ArrayList<>();
             // wait for the new set of incoming logs.
             incomingLogs.add(inputQueue.take());
-            // Empty the queue for the next set of logs.
+            // Empty the queue completely.
             inputQueue.drainTo(incomingLogs, inputQueue.size());
-            // offer the parsed logs to the next queue for the next worker.
+            // offer the parsed logs for the next worker.
             next(parseIncomingLogs(incomingLogs));
         } catch (InterruptedException e) {
             log.warn("LogsParserWorker got interrupted", e);
