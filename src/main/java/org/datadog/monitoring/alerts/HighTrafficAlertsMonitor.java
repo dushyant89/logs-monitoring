@@ -3,12 +3,14 @@ package org.datadog.monitoring.alerts;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.datadog.monitoring.stats.StatsSummary;
 
 import java.util.Optional;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Slf4j
 public class HighTrafficAlertsMonitor extends AbstractAlertsMonitor {
     private final int averageRequestsThreshold;
 
@@ -24,6 +26,8 @@ public class HighTrafficAlertsMonitor extends AbstractAlertsMonitor {
 
         if (statsSummariesWindow.isAtFullCapacity()) {
             int averageHitsPerMonitoringSession = Math.round((float) totalHitsPerMonitoringSession / (float) statsSummariesWindow.maxSize());
+
+            log.trace(String.format("averageHitsPerMonitoringSession: %d", averageHitsPerMonitoringSession));
 
             totalHitsPerMonitoringSession -= statsSummariesWindow.remove().getTotalRequestCount();
 
