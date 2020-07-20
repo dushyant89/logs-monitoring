@@ -31,7 +31,7 @@ To see all configuration options:
 
 ## Logging
 
-The application during its execution logs information from logging levels ranging from `TRACE` to `ERROR` in `application.log` file in the project root
+The application during its execution logs information from logging levels ranging from `TRACE` to `ERROR` in `application.log` file in the project root.
 
 ## Application Design
 
@@ -39,5 +39,35 @@ The application during its execution logs information from logging levels rangin
 
 * The application is composed of several workers which are started by the main class i.e. `MonitoringApplication`. 
 * Each worker is based on `single responsibility` principle.
-* The workers are connected by unbounded FIFO queues (represented by thick arrow). The work output of a worker can handed to the next worker in the sequence.
+* The workers are connected by unbounded FIFO queues (represented by thick arrow). The work output of a worker can be handed to the next worker in the sequence.
+* Workers which operate in a sequence act as `producer` & `consumer` respectively for e.g. `LogsParserWorker` is a producer which gives parsed logs to the `StatsSummaryGeneratorWorker`.
 * If a worker's output need to be displayed to the user they use the `PrintMessageWorker` which currently simple logs to the console.
+
+## Fault tolerance
+
+* Any sort of exceptions which can occur are caught and logged.
+* Each worker running is as a separate thread and if any thread terminates due to a failure during execution prior to shutdown, a new one will take its place if needed to execute subsequent tasks.
+
+## Availability
+
+The application will keep running unless the user quits the application.
+
+## Sample output
+
+```
+****** Traffic stats  ******
+Total requests served: 11
+Total content size: 54 KB
+Top 5 sections by hits:
+	app -> 2
+	search -> 2
+	list -> 2
+	posts -> 2
+	wp-admin -> 2
+HTTP Methods by hits:
+	DELETE -> 2
+	GET -> 9
+****** End of traffic stats ******
+
+!!! A High traffic alert is now Active !!!
+```
