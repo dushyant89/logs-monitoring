@@ -54,6 +54,30 @@ The application during its execution logs information from logging levels rangin
 * Workers which operate in a sequence act as `producer` & `consumer` respectively for e.g. `LogsParserWorker` is a producer which gives parsed logs to the `TrafficSummaryGeneratorWorker`.
 * If a worker's output need to be displayed to the user they use the `PrintMessageWorker` which currently simple logs to the console.
 
+## Application Flow
+
+### LogsListener
+
+* Tails the log file for new logs which are appended to the end of the file.
+* New log lines are added to an unbounded queue on which `LogsParserWorker` is blocked.
+
+### LogsParserWorker
+
+* A scheduled worker which runs every `stats-interval` seconds.
+* So, if the time window of displaying stats is 10 seconds, this worker will *once every 10 seconds*.
+* It empties the queue completely and parses the log lines and hands over to the `TrafficSummaryGeneratorWorker`.
+
+### TrafficSummaryGeneratorWorker
+
+* It waits on the parsed log lines and generates the traffic summary for the log lines it gets.
+* The generated traffic summary is printed and also sent to the next worker i.e `AlertsMonitorWorker`
+
+### AlertsMonitorWorker
+
+* Receives the traffic summary and stores in a circular FIFO queue.
+* Once the queue is full, the average requests per seconds are calculated and compared agains the threshold.
+* If the threshold is crossed, we raise an alert.
+
 ## Fault tolerance
 
 * Any sort of exceptions which can occur are caught and logged.
@@ -80,11 +104,11 @@ The application will keep running unless the user quits the application.
 Total requests served: 11
 Total content size: 54 KB
 Top 5 sections by hits:
-	app -> 2
+	app -> 3
 	search -> 2
-	list -> 2
+	profile -> 2
 	posts -> 2
-	wp-admin -> 2
+	admin -> 2
 HTTP Methods by hits:
 	DELETE -> 2
 	GET -> 9

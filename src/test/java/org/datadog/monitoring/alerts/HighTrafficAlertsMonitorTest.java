@@ -26,6 +26,7 @@ public class HighTrafficAlertsMonitorTest {
         Optional<String> processAlertResult;
         for (int i=0; i < ALERTS_WINDOW_SIZE - 1; i++) {
             processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD));
+            // No alert should be there since the window is not at full capacity
             Assertions.assertTrue(processAlertResult.isEmpty());
         }
     }
@@ -36,7 +37,7 @@ public class HighTrafficAlertsMonitorTest {
 
         addStatsSummaries(ALERTS_WINDOW_SIZE - 1, ALERTS_THRESHOLD);
 
-        // The average requests will be over the threshold
+        // The average no. of requests will now be over the threshold
         processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD + ALERTS_WINDOW_SIZE));
         Assertions.assertTrue(processAlertResult.isPresent());
     }
@@ -48,12 +49,14 @@ public class HighTrafficAlertsMonitorTest {
 
         Assertions.assertEquals(highTrafficAlertsMonitor.getAlert().getAlertSate(), Alert.State.Active);
         // bring the moving average below the threshold
-        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD - 5));
+        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD - ALERTS_WINDOW_SIZE));
         Assertions.assertTrue(processAlertResult.isPresent());
         Assertions.assertEquals(highTrafficAlertsMonitor.getAlert().getAlertSate(), Alert.State.Recovered);
     }
 
     @Test
+    // Tests the below state transition
+    // Active -> Recovered -> Inactive
     public void testAlertIsInActiveFromRecovered() {
         Optional<String> processAlertResult;
         addStatsSummaries(ALERTS_WINDOW_SIZE, ALERTS_THRESHOLD + 1);
