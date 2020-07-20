@@ -32,3 +32,12 @@ To see all configuration options:
 ## Logging
 
 The application during its execution logs information from logging levels ranging from `TRACE` to `ERROR` in `application.log` file in the project root
+
+## Application Design
+
+![App Architecture](app-architecture.png)
+
+* The application is composed of several workers which are started by the main class i.e. `MonitoringApplication`. 
+* Each worker is based on `single responsibility` principle.
+* The workers are connected by unbounded FIFO queues (represented by thick arrow). The work output of a worker can handed to the next worker in the sequence.
+* If a worker's output need to be displayed to the user they use the `PrintMessageWorker` which currently simple logs to the console.
