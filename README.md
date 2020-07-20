@@ -29,6 +29,17 @@ To see all configuration options:
 
 `./run.sh --help`
 
+```
+usage: monitor [-a <arg>] [-f <arg>] [-r <arg>] [-s <arg>]
+ -a,--alerts-interval <arg>   length of the time window for monitoring the
+                              alerts
+ -f,--file-location <arg>     location of the log file
+ -r,--max-rps <arg>           maximum requests per second threshold, after
+                              which alert will fire
+ -s,--stats-interval <arg>    time interval after which stats will be
+                              displayed
+```
+
 ## Logging
 
 The application during its execution logs information from logging levels ranging from `TRACE` to `ERROR` in `application.log` file in the project root.
