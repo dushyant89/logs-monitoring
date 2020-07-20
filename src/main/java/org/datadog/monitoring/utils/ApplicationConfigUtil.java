@@ -7,6 +7,7 @@ import org.datadog.monitoring.ApplicationConfig;
 import org.datadog.monitoring.ApplicationConfigOptions;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Optional;
 
 @UtilityClass
