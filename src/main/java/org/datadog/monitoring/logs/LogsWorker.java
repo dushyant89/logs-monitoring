@@ -25,7 +25,7 @@ public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
             incomingLogs.add(inputQueue.take());
             // Empty the queue for the next set of logs.
             inputQueue.drainTo(incomingLogs, inputQueue.size());
-            // offer the parsed logs to the output queue for the next worker.
+            // offer the parsed logs to the next queue for the next worker.
             next(parseIncomingLogs(incomingLogs));
         } catch (InterruptedException e) {
             log.warn("LogsWorker got interrupted", e);
