@@ -2,12 +2,12 @@ package org.datadog.monitoring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.Tailer;
-import org.datadog.monitoring.stats.StatsSummaryWorker;
+import org.datadog.monitoring.stats.AlertsMonitorWorker;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
-import org.datadog.monitoring.logs.LogsWorker;
+import org.datadog.monitoring.logs.LogsParserWorker;
 import org.datadog.monitoring.logs.LogsListener;
-import org.datadog.monitoring.logs.LogLinesWorker;
+import org.datadog.monitoring.logs.StatsSummaryGeneratorWorker;
 import org.datadog.monitoring.stats.StatsSummary;
 import org.datadog.monitoring.ui.PrintMessageWorker;
 import org.datadog.monitoring.utils.ApplicationConfigUtil;
@@ -43,7 +43,7 @@ public class MonitoringApplication {
 
         try {
             scheduledLogsWorker.scheduleAtFixedRate(
-                    new LogsWorker(incomingLogsQueue, logLinesQueue, new ApacheCommonLogsParser()),
+                    new LogsParserWorker(incomingLogsQueue, logLinesQueue, new ApacheCommonLogsParser()),
                     appConfig.getStatsDisplayInterval(),
                     appConfig.getStatsDisplayInterval(),
                     TimeUnit.SECONDS
@@ -54,12 +54,12 @@ public class MonitoringApplication {
                     0,
                     true)
             );
-            executableWorkers.submit(new LogLinesWorker(
+            executableWorkers.submit(new StatsSummaryGeneratorWorker(
                     logLinesQueue,
                     statsSummariesQueue,
                     messagesQueue)
             );
-            executableWorkers.submit(new StatsSummaryWorker(
+            executableWorkers.submit(new AlertsMonitorWorker(
                     statsSummariesQueue,
                     messagesQueue,
                     appConfig.getAlertsMonitoringInterval() / appConfig.getStatsDisplayInterval(),

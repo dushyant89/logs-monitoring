@@ -9,23 +9,23 @@ import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
 @Slf4j
-public class StatsSummaryWorker extends SimpleWorker<StatsSummary> {
+public class AlertsMonitorWorker extends SimpleWorker<StatsSummary> {
     private final AlertsMonitor highTrafficAlertsMonitor;
 
-    public StatsSummaryWorker(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> messageQueue, int alertsWindowSize, int threshold) {
+    public AlertsMonitorWorker(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> messageQueue, int alertsWindowSize, int threshold) {
         super(inputQueue, messageQueue);
         highTrafficAlertsMonitor = new HighTrafficAlertsMonitor(alertsWindowSize, threshold);
     }
 
     public void run() {
-        log.trace("StatsSummaryWorker starting to run");
+        log.trace("AlertsMonitorWorker starting to run");
 
         while (true) {
             try {
                 Optional<String> alertOutput = highTrafficAlertsMonitor.checkForAlert(inputQueue.take());
                 alertOutput.ifPresent(this::handOutput);
             } catch (InterruptedException e) {
-                log.warn("StatsSummaryWorker got interrupted", e);
+                log.warn("AlertsMonitorWorker got interrupted", e);
             }
         }
     }

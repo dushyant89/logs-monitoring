@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 @Slf4j
-public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
+public class LogsParserWorker extends SequentialWorker<String, List<LogLine>> {
     LogsParser logsParser;
 
-    public LogsWorker(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> nextQueue, LogsParser parser) {
+    public LogsParserWorker(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> nextQueue, LogsParser parser) {
         super(inputQueue, nextQueue);
         this.logsParser = parser;
     }
 
     public void run() {
-        log.trace("LogsWorker starting to run");
+        log.trace("LogsParserWorker starting to run");
 
         try {
             List<String> incomingLogs = new ArrayList<>();
@@ -28,7 +28,7 @@ public class LogsWorker extends SequentialWorker<String, List<LogLine>> {
             // offer the parsed logs to the next queue for the next worker.
             next(parseIncomingLogs(incomingLogs));
         } catch (InterruptedException e) {
-            log.warn("LogsWorker got interrupted", e);
+            log.warn("LogsParserWorker got interrupted", e);
         }
     }
 

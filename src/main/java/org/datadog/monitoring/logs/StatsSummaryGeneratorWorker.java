@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 @Slf4j
-public class LogLinesWorker extends SequentialWorker<List<LogLine>, StatsSummary> {
+public class StatsSummaryGeneratorWorker extends SequentialWorker<List<LogLine>, StatsSummary> {
 
-    public LogLinesWorker(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
+    public StatsSummaryGeneratorWorker(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
         super(inputQueue, nextQueue, outputQueue);
     }
 
     public void run() {
-        log.trace("LogLinesWorker starting to run");
+        log.trace("StatsSummaryGeneratorWorker starting to run");
 
         while (true) {
             try {
@@ -23,7 +23,7 @@ public class LogLinesWorker extends SequentialWorker<List<LogLine>, StatsSummary
                 handOutput(statsSummary.toString());
                 next(statsSummary);
             } catch (InterruptedException e) {
-                log.warn("LogLinesWorker got interrupted", e);
+                log.warn("StatsSummaryGeneratorWorker got interrupted", e);
             }
         }
     }
