@@ -18,7 +18,7 @@ public class LogsListener extends TailerListenerAdapter {
     }
 
     public void fileNotFound() {
-        log.warn("File not found");
+        log.error("Log file not found");
     }
 
     public void handle(Exception ex) {
