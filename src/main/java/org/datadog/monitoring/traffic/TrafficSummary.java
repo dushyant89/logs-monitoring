@@ -1,4 +1,4 @@
-package org.datadog.monitoring.stats;
+package org.datadog.monitoring.traffic;
 
 
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.*;
 
 @Data
-public class StatsSummary {
+public class TrafficSummary {
     private int totalRequestCount;
 
     private int invalidRequestCount;
@@ -23,9 +23,9 @@ public class StatsSummary {
 
     private static final int numberOfTopSections = 5;
 
-    public StatsSummary() { }
+    public TrafficSummary() { }
 
-    public StatsSummary(int totalRequestCount) {
+    public TrafficSummary(int totalRequestCount) {
         this.totalRequestCount = totalRequestCount;
     }
 

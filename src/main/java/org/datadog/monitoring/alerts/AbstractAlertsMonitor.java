@@ -2,7 +2,7 @@ package org.datadog.monitoring.alerts;
 
 import lombok.Data;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import org.datadog.monitoring.stats.StatsSummary;
+import org.datadog.monitoring.traffic.TrafficSummary;
 
 /**
  * Class which specifies the basic layout for any sort of alert
@@ -11,7 +11,7 @@ import org.datadog.monitoring.stats.StatsSummary;
 @Data
 public abstract class AbstractAlertsMonitor implements AlertsMonitor {
     // Circular queue which stores the stats summaries
-    protected final CircularFifoQueue<StatsSummary> statsSummariesWindow;
+    protected final CircularFifoQueue<TrafficSummary> statsSummariesWindow;
     // total no. of hits which we have monitored since app start.
     protected int totalHitsPerMonitoringSession;
     // The alert which we will monitor
