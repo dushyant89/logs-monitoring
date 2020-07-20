@@ -52,6 +52,13 @@ The application during its execution logs information from logging levels rangin
 
 The application will keep running unless the user quits the application.
 
+## Improvements
+
+* Building a nice UI to show the traffic summary and alerts, currently everything goes to the console and you need to scroll to see any previous alerts which were active or recovered.
+* Implementing more log formats like `Combined Log Format`, `Extended Log File Format` etc. but any new format can be added easily by implementing the  `LogsParser` interface.
+* Adding more alert monitors for e.g. `LowTrafficAlertsMonitor` when the traffic drops below a specific moving average.
+* There is no persistance for the traffic summary and alerts we are generating. Connecting to a high throughput datastore like `Cassandra` will be good.
+
 ## Sample output
 
 ```
