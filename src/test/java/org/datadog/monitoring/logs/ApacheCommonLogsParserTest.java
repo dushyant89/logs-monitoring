@@ -36,7 +36,7 @@ public class ApacheCommonLogsParserTest {
         final String [] validLogLines = new String[] {
                 "249.78.222.44 - terry4451 [13/Jul/2020:15:42:36 +0200] \"PUT /syndicate/bandwidth HTTP/1.0\" 200 15065", // no id check
                 "249.78.222.44 - - [13/Jul/2020:15:42:36 +0200] \"PUT /syndicate/bandwidth HTTP/1.0\" 200 15065", // no user id
-                "249.78.222.44 - terry4451 [13/Jul/2020:15:42:36 +0200] \"GET / HTTP/1.0\" 200 15065" // index section in request path
+                " 249.78.222.44 - terry4451 [13/Jul/2020:15:42:36 +0200] \"GET / HTTP/1.0\" 200 15065 " // index section in request path
         };
 
         for (String validLogLine: validLogLines) {
