@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ApacheCommonLogsParserTest {
+public class CommonLogParserTest {
     private LogsParser logsParser;
 
     @BeforeAll
     public void setLogsParser() {
-        logsParser = new ApacheCommonLogsParser();
+        logsParser = new CommonLogParser();
     }
 
     @Test

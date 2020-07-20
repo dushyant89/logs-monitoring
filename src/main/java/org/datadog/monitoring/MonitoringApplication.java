@@ -5,7 +5,7 @@ import org.apache.commons.io.input.Tailer;
 import org.datadog.monitoring.alerts.HighTrafficAlertsMonitor;
 import org.datadog.monitoring.alerts.AlertsMonitorWorker;
 import org.datadog.monitoring.config.ApplicationConfig;
-import org.datadog.monitoring.logs.ApacheCommonLogsParser;
+import org.datadog.monitoring.logs.CommonLogParser;
 import org.datadog.monitoring.logs.LogLine;
 import org.datadog.monitoring.logs.LogsParserWorker;
 import org.datadog.monitoring.logs.LogsListener;
@@ -46,7 +46,7 @@ public class MonitoringApplication {
         try {
             // scheduled worker for receiving tailed logs and parsing them.
             scheduledLogsWorker.scheduleAtFixedRate(
-                    new LogsParserWorker(incomingLogsQueue, logLinesQueue, new ApacheCommonLogsParser()),
+                    new LogsParserWorker(incomingLogsQueue, logLinesQueue, new CommonLogParser()),
                     appConfig.getStatsDisplayInterval(),
                     appConfig.getStatsDisplayInterval(),
                     TimeUnit.SECONDS
