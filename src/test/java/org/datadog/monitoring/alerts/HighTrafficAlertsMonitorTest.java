@@ -1,7 +1,7 @@
 package org.datadog.monitoring.alerts;
 
 
-import org.datadog.monitoring.stats.StatsSummary;
+import org.datadog.monitoring.traffic.TrafficSummary;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class HighTrafficAlertsMonitorTest {
     public void testAlertResultWhenWindowIsNotFull() {
         Optional<String> processAlertResult;
         for (int i=0; i < ALERTS_WINDOW_SIZE - 1; i++) {
-            processAlertResult = highTrafficAlertsMonitor.checkForAlert(new StatsSummary(ALERTS_THRESHOLD));
+            processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD));
             Assertions.assertTrue(processAlertResult.isEmpty());
         }
     }
@@ -37,7 +37,7 @@ public class HighTrafficAlertsMonitorTest {
         addStatsSummaries(ALERTS_WINDOW_SIZE - 1, ALERTS_THRESHOLD);
 
         // The average requests will be over the threshold
-        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new StatsSummary(ALERTS_THRESHOLD + ALERTS_WINDOW_SIZE));
+        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD + ALERTS_WINDOW_SIZE));
         Assertions.assertTrue(processAlertResult.isPresent());
     }
 
@@ -48,7 +48,7 @@ public class HighTrafficAlertsMonitorTest {
 
         Assertions.assertEquals(highTrafficAlertsMonitor.getAlert().getAlertSate(), Alert.State.Active);
         // bring the moving average below the threshold
-        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new StatsSummary(ALERTS_THRESHOLD - 5));
+        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD - 5));
         Assertions.assertTrue(processAlertResult.isPresent());
         Assertions.assertEquals(highTrafficAlertsMonitor.getAlert().getAlertSate(), Alert.State.Recovered);
     }
@@ -60,18 +60,18 @@ public class HighTrafficAlertsMonitorTest {
 
         Assertions.assertEquals(highTrafficAlertsMonitor.getAlert().getAlertSate(), Alert.State.Active);
         // bring the moving average below the threshold
-        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new StatsSummary(ALERTS_THRESHOLD - ALERTS_WINDOW_SIZE));
+        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD - ALERTS_WINDOW_SIZE));
         Assertions.assertTrue(processAlertResult.isPresent());
         Assertions.assertEquals(highTrafficAlertsMonitor.getAlert().getAlertSate(), Alert.State.Recovered);
 
-        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new StatsSummary(ALERTS_THRESHOLD));
+        processAlertResult = highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(ALERTS_THRESHOLD));
         Assertions.assertTrue(processAlertResult.isEmpty());
         Assertions.assertEquals(highTrafficAlertsMonitor.getAlert().getAlertSate(), Alert.State.Inactive);
     }
 
     private void addStatsSummaries(int count, int requestCount) {
         for (int i=0; i < count; i++) {
-            highTrafficAlertsMonitor.checkForAlert(new StatsSummary(requestCount));
+            highTrafficAlertsMonitor.checkForAlert(new TrafficSummary(requestCount));
         }
     }
 }

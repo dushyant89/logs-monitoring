@@ -2,7 +2,7 @@ package org.datadog.monitoring.logs;
 
 import lombok.Builder;
 import lombok.Data;
-import org.datadog.monitoring.stats.HttpMethod;
+import org.datadog.monitoring.traffic.HttpMethod;
 
 import java.time.ZonedDateTime;
 

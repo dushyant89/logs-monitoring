@@ -9,8 +9,8 @@ import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
 import org.datadog.monitoring.logs.LogsParserWorker;
 import org.datadog.monitoring.logs.LogsListener;
-import org.datadog.monitoring.stats.StatsSummaryGeneratorWorker;
-import org.datadog.monitoring.stats.StatsSummary;
+import org.datadog.monitoring.traffic.TrafficSummaryGeneratorWorker;
+import org.datadog.monitoring.traffic.TrafficSummary;
 import org.datadog.monitoring.ui.PrintMessageWorker;
 import org.datadog.monitoring.utils.ApplicationConfigUtil;
 
@@ -35,7 +35,7 @@ public class MonitoringApplication {
 
         BlockingQueue<String> incomingLogsQueue = new LinkedBlockingQueue<>();
         BlockingQueue<List<LogLine>> logLinesQueue = new LinkedBlockingQueue<>();
-        BlockingQueue<StatsSummary> statsSummariesQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<TrafficSummary> trafficSummaryQueue = new LinkedBlockingQueue<>();
         BlockingQueue<String> messagesQueue = new LinkedBlockingQueue<>();
 
         // These executors will not be shutdown, unless the user closes the application or the main thread dies.
@@ -44,25 +44,29 @@ public class MonitoringApplication {
         ExecutorService executableWorkers = Executors.newFixedThreadPool(4);
 
         try {
+            // scheduled worker for receiving tailed logs and parsing them.
             scheduledLogsWorker.scheduleAtFixedRate(
                     new LogsParserWorker(incomingLogsQueue, logLinesQueue, new ApacheCommonLogsParser()),
                     appConfig.getStatsDisplayInterval(),
                     appConfig.getStatsDisplayInterval(),
                     TimeUnit.SECONDS
             );
+            // worker which tails the log file for any new events.
             executableWorkers.submit(new Tailer(
                     Paths.get(appConfig.getLogFileLocation()).toFile(),
                     new LogsListener(incomingLogsQueue),
                     0,
                     true)
             );
-            executableWorkers.submit(new StatsSummaryGeneratorWorker(
+            // worker consuming parsed log lines and produces the traffic summary for the log lines received.
+            executableWorkers.submit(new TrafficSummaryGeneratorWorker(
                     logLinesQueue,
-                    statsSummariesQueue,
+                    trafficSummaryQueue,
                     messagesQueue)
             );
+            // worker which consumes traffic summary and monitors for any possible alerts.
             executableWorkers.submit(new AlertsMonitorWorker(
-                    statsSummariesQueue,
+                    trafficSummaryQueue,
                     messagesQueue,
                     new HighTrafficAlertsMonitor(
                             appConfig.getAlertsMonitoringInterval() / appConfig.getStatsDisplayInterval(),

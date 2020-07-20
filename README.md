@@ -40,7 +40,7 @@ The application during its execution logs information from logging levels rangin
 * The application is composed of several workers which are started by the main class i.e. `MonitoringApplication`. 
 * Each worker is based on `single responsibility` principle.
 * The workers are connected by unbounded FIFO queues (represented by thick arrow). The work output of a worker can be handed to the next worker in the sequence.
-* Workers which operate in a sequence act as `producer` & `consumer` respectively for e.g. `LogsParserWorker` is a producer which gives parsed logs to the `StatsSummaryGeneratorWorker`.
+* Workers which operate in a sequence act as `producer` & `consumer` respectively for e.g. `LogsParserWorker` is a producer which gives parsed logs to the `TrafficSummaryGeneratorWorker`.
 * If a worker's output need to be displayed to the user they use the `PrintMessageWorker` which currently simple logs to the console.
 
 ## Fault tolerance

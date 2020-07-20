@@ -1,7 +1,7 @@
 package org.datadog.monitoring.logs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.datadog.monitoring.stats.HttpMethod;
+import org.datadog.monitoring.traffic.HttpMethod;
 import org.datadog.monitoring.utils.DateTimeUtil;
 
 import java.util.regex.Matcher;

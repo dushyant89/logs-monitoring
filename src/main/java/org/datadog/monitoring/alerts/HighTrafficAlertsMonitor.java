@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.datadog.monitoring.stats.StatsSummary;
+import org.datadog.monitoring.traffic.TrafficSummary;
 
 import java.util.Optional;
 
@@ -19,10 +19,10 @@ public class HighTrafficAlertsMonitor extends AbstractAlertsMonitor {
         this.averageRequestsThreshold = averageRequestsThreshold;
     }
 
-    public Optional<String> checkForAlert(@NonNull StatsSummary statsSummary) {
-        statsSummariesWindow.offer(statsSummary);
+    public Optional<String> checkForAlert(@NonNull TrafficSummary trafficSummary) {
+        statsSummariesWindow.offer(trafficSummary);
 
-        totalHitsPerMonitoringSession += statsSummary.getTotalRequestCount();
+        totalHitsPerMonitoringSession += trafficSummary.getTotalRequestCount();
 
         if (statsSummariesWindow.isAtFullCapacity()) {
             int averageHitsPerMonitoringSession = Math.round((float) totalHitsPerMonitoringSession / (float) statsSummariesWindow.maxSize());
