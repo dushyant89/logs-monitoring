@@ -1,11 +1,11 @@
 package org.datadog.monitoring.traffic;
 
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.*;
 
-@Data
+@Getter
 public class TrafficSummary {
     private int totalRequestCount;
 
@@ -54,8 +54,8 @@ public class TrafficSummary {
         return output.toString();
     }
 
-    private Map<String, Integer> getTopSections() {
-        final Map<String, Integer> topSections = new HashMap<>();
+    private LinkedHashMap<String, Integer> getTopSections() {
+        final LinkedHashMap<String, Integer> topSections = new LinkedHashMap<>();
         final NavigableMap<Integer, Set<String>> countVsSectionsMap = new TreeMap<>(Comparator.reverseOrder());
 
         sectionWiseHits.forEach((k,v) -> {
