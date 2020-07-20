@@ -1,14 +1,14 @@
 package org.datadog.monitoring.logs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.datadog.monitoring.SequentialWorker;
+import org.datadog.monitoring.ProducerConsumerWorker;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 @Slf4j
-public class LogsParserWorker extends SequentialWorker<String, List<LogLine>> {
+public class LogsParserWorker extends ProducerConsumerWorker<String, List<LogLine>> {
     LogsParser logsParser;
 
     public LogsParserWorker(BlockingQueue<String> inputQueue, BlockingQueue<List<LogLine>> nextQueue, LogsParser parser) {

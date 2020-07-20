@@ -1,6 +1,6 @@
 package org.datadog.monitoring.utils;
 
-import org.datadog.monitoring.ApplicationConfig;
+import org.datadog.monitoring.config.ApplicationConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

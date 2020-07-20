@@ -1,4 +1,4 @@
-package org.datadog.monitoring;
+package org.datadog.monitoring.config;
 
 import lombok.Getter;
 import org.apache.commons.cli.Option;
@@ -7,7 +7,7 @@ public enum ApplicationConfigOptions {
     FileLocation("f", "file-location", "location of the log file"),
     StatsInterval("s", "stats-interval", "time interval after which stats will be displayed"),
     AlertsInterval("a", "alerts-interval", "length of the time window for monitoring the alerts"),
-    RPSThreshold("r", "max-rps", "RPS threshold after which alert will fire");
+    RPSThreshold("r", "max-rps", "maximum requests per second threshold, after which alert will fire");
 
     @Getter
     private final String shortName;

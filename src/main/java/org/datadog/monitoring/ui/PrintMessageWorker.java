@@ -1,12 +1,12 @@
 package org.datadog.monitoring.ui;
 
 import lombok.extern.slf4j.Slf4j;
-import org.datadog.monitoring.SimpleWorker;
+import org.datadog.monitoring.ConsumerWorker;
 
 import java.util.concurrent.BlockingQueue;
 
 @Slf4j
-public class PrintMessageWorker extends SimpleWorker<String> {
+public class PrintMessageWorker extends ConsumerWorker<String> {
     public PrintMessageWorker(BlockingQueue<String> inputQueue) {
         super(inputQueue);
     }

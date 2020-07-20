@@ -1,14 +1,14 @@
-package org.datadog.monitoring.stats;
+package org.datadog.monitoring.alerts;
 
 import lombok.extern.slf4j.Slf4j;
-import org.datadog.monitoring.SimpleWorker;
-import org.datadog.monitoring.alerts.AlertsMonitor;
+import org.datadog.monitoring.ConsumerWorker;
+import org.datadog.monitoring.stats.StatsSummary;
 
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
 @Slf4j
-public class AlertsMonitorWorker extends SimpleWorker<StatsSummary> {
+public class AlertsMonitorWorker extends ConsumerWorker<StatsSummary> {
     private final AlertsMonitor alertsMonitor;
 
     public AlertsMonitorWorker(BlockingQueue<StatsSummary> inputQueue, BlockingQueue<String> messageQueue, AlertsMonitor alertsMonitor) {

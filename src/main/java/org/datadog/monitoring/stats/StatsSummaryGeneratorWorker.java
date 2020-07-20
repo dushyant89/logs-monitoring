@@ -1,14 +1,14 @@
-package org.datadog.monitoring.logs;
+package org.datadog.monitoring.stats;
 
 import lombok.extern.slf4j.Slf4j;
-import org.datadog.monitoring.SequentialWorker;
-import org.datadog.monitoring.stats.StatsSummary;
+import org.datadog.monitoring.ProducerConsumerWorker;
+import org.datadog.monitoring.logs.LogLine;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 @Slf4j
-public class StatsSummaryGeneratorWorker extends SequentialWorker<List<LogLine>, StatsSummary> {
+public class StatsSummaryGeneratorWorker extends ProducerConsumerWorker<List<LogLine>, StatsSummary> {
 
     public StatsSummaryGeneratorWorker(BlockingQueue<List<LogLine>> inputQueue, BlockingQueue<StatsSummary> nextQueue, BlockingQueue<String> outputQueue) {
         super(inputQueue, nextQueue, outputQueue);

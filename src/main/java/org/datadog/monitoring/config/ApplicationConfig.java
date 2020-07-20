@@ -1,4 +1,4 @@
-package org.datadog.monitoring;
+package org.datadog.monitoring.config;
 
 import lombok.Data;
 

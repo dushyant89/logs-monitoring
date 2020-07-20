@@ -3,8 +3,8 @@ package org.datadog.monitoring.utils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
-import org.datadog.monitoring.ApplicationConfig;
-import org.datadog.monitoring.ApplicationConfigOptions;
+import org.datadog.monitoring.config.ApplicationConfig;
+import org.datadog.monitoring.config.ApplicationConfigOptions;
 
 import java.nio.file.Paths;
 import java.util.Optional;
