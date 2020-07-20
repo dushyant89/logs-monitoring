@@ -2,6 +2,7 @@ package org.datadog.monitoring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.Tailer;
+import org.datadog.monitoring.alerts.HighTrafficAlertsMonitor;
 import org.datadog.monitoring.stats.AlertsMonitorWorker;
 import org.datadog.monitoring.logs.ApacheCommonLogsParser;
 import org.datadog.monitoring.logs.LogLine;
@@ -62,8 +63,10 @@ public class MonitoringApplication {
             executableWorkers.submit(new AlertsMonitorWorker(
                     statsSummariesQueue,
                     messagesQueue,
-                    appConfig.getAlertsMonitoringInterval() / appConfig.getStatsDisplayInterval(),
-                    appConfig.getRequestsPerSecondThreshold()
+                    new HighTrafficAlertsMonitor(
+                            appConfig.getAlertsMonitoringInterval() / appConfig.getStatsDisplayInterval(),
+                            appConfig.getRequestsPerSecondThreshold()
+                    )
             ));
             executableWorkers.submit(new PrintMessageWorker(messagesQueue));
         } catch (RejectedExecutionException executionException) {
