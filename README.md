@@ -52,7 +52,7 @@ The application during its execution logs information from logging levels rangin
 * Each worker is based on the `single responsibility` principle.
 * The workers are connected by unbounded FIFO queues (represented by thick arrow). The work output of a worker can be handed to the next worker in the sequence.
 * Workers which operate in a sequence act as `producer` & `consumer` respectively for e.g. `LogsParserWorker` is a producer which gives parsed logs to the `TrafficSummaryGeneratorWorker`.
-* If a worker's output need to be displayed to the user they use the `PrintMessageWorker` which currently simple logs to the console.
+* If a worker's output need to be displayed to the user they use the `PrintMessageWorker` which currently simply logs to the console.
 
 ## Application Flow
 
