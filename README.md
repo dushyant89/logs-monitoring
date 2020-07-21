@@ -1,6 +1,6 @@
 # Datadog Logs Monitoring App
 
-This app listens/tails the access logs from a location like `/tmp/access.log` and generates statistics and alerts for the traffic.
+This app listens/tails the access logs from a location like `/tmp/access.log` and generates simple statistics and alerts for the traffic.
 
 ## Requirements
 * maven
@@ -137,6 +137,6 @@ The application will keep running unless the user quits the application.
 * Implementing more log formats like `Combined Log Format`, `Extended Log File Format` etc. but any new format can be added easily by implementing the  `LogsParser` interface.
 * Currently, the pattern matching for `Common Log Format` is very rudimentary and it doesn't specifically match for ipaddress or hostnames e.g.
 * Adding more alert monitors for e.g. `LowTrafficAlertsMonitor` when the traffic drops below a specific moving average.
-* Adding more elements to the traffic summary for e.g. no. of requests by HTTP methods.
+* Adding more elements to the traffic summary for e.g. some stats about the response codes.
 * There is no persistence for the traffic summary and alerts that we are generate. Connecting to a high throughput datastore like `Cassandra` will be good.
 * Improving the test coverage, couldn't add more tests due to time constraints.
