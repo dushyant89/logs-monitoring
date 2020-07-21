@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface AlertsMonitor {
     // Message which can be used when a alert is processed.
-    String ALERT_MESSAGE = "\t!!! A %s is now %s !!!\n";
+    String ALERT_MESSAGE = "\t!!! A %s alert is now %s !!!\n";
 
     /**
      * Based on the information we get from the stats summary we check if

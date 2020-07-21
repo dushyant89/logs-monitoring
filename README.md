@@ -21,7 +21,7 @@ Runs the app with default configuration:
 
 `./run.sh`
 
-For e.g. to run with custom log location:
+To run with custom log location:
 
 `./run.sh -f /var/access.log`
 
@@ -40,13 +40,8 @@ usage: monitor [-a <arg>] [-f <arg>] [-r <arg>] [-s <arg>]
                               displayed
 ```
 
-To see alerts being active and recovered in quick succession, try:
-
-`./run.sh -s 1 -a 1 -r 5`
-
-Assuming 5 requests per second is the threshold which is enough.
-
 ### Sample output
+`./run.sh -s 1 -a 1 -r 5`
 
 ```
 ****** Traffic stats  ******
@@ -64,7 +59,7 @@ HTTP Methods by hits:
 	POST -> 2
 ****** End of traffic stats ******
 
-	!!! A HighTraffic is now Active !!!
+	!!! A HighTraffic alert is now Active !!!
 
 ****** Traffic stats  ******
 Total requests served: 5
@@ -81,7 +76,7 @@ HTTP Methods by hits:
 	PUT -> 1
 ****** End of traffic stats ******
 
-	!!! A HighTraffic is now Recovered !!!
+	!!! A HighTraffic alert is now Recovered !!!
 ```
 
 ## Logging
