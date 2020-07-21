@@ -40,6 +40,50 @@ usage: monitor [-a <arg>] [-f <arg>] [-r <arg>] [-s <arg>]
                               displayed
 ```
 
+To see alerts being active and recovered in quick succession, try:
+
+`./run.sh -s 1 -a 1 -r 5`
+
+Assuming 5 requests per second is the threshold which is enough.
+
+### Sample output
+
+```
+****** Traffic stats  ******
+Total requests served: 6
+Total content size: 29 KB
+Top 5 sections by hits:
+	posts -> 2
+	app -> 1
+	explore -> 1
+	wp-content -> 1
+	apps -> 1
+HTTP Methods by hits:
+	GET -> 3
+	PUT -> 1
+	POST -> 2
+****** End of traffic stats ******
+
+	!!! A HighTraffic is now Active !!!
+
+****** Traffic stats  ******
+Total requests served: 5
+Total content size: 24 KB
+Top 5 sections by hits:
+	explore -> 2
+	app -> 1
+	posts -> 1
+	wp-admin -> 1
+HTTP Methods by hits:
+	GET -> 2
+	DELETE -> 1
+	POST -> 1
+	PUT -> 1
+****** End of traffic stats ******
+
+	!!! A HighTraffic is now Recovered !!!
+```
+
 ## Logging
 
 The application during its execution logs information from logging levels ranging from `TRACE` to `ERROR` in `application.log` file in the project root.
@@ -96,23 +140,3 @@ The application will keep running unless the user quits the application.
 * Adding more elements to the traffic summary for e.g. no. of requests by HTTP methods.
 * There is no persistence for the traffic summary and alerts that we are generate. Connecting to a high throughput datastore like `Cassandra` will be good.
 * Improving the test coverage, couldn't add more tests due to time constraints.
-
-## Sample output
-
-```
-****** Traffic stats  ******
-Total requests served: 11
-Total content size: 54 KB
-Top 5 sections by hits:
-	app -> 3
-	search -> 2
-	profile -> 2
-	posts -> 2
-	admin -> 2
-HTTP Methods by hits:
-	DELETE -> 2
-	GET -> 9
-****** End of traffic stats ******
-
-!!! A High traffic alert is now Active !!!
-```
