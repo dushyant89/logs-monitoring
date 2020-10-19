@@ -1,4 +1,4 @@
-# Datadog Logs Monitoring App
+# Logs Monitoring App
 
 This app listens/tails the access logs from a location like `/tmp/access.log` and generates simple statistics and alerts for the traffic.
 
