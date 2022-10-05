@@ -1,13 +1,11 @@
 package org.datadog.monitoring.logs;
 
-import lombok.extern.slf4j.Slf4j;
 import org.datadog.monitoring.traffic.HttpMethod;
 import org.datadog.monitoring.utils.DateTimeUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Slf4j
 public class CommonLogParser implements LogsParser {
     // 249.78.222.44 - terry4451 [13/Jul/2020:15:42:36 +0200] "DELETE /syndicate/bandwidth HTTP/1.0" 403 15065
     private static final Pattern pattern = Pattern.compile("^([^\\s]+) ([^\\s]+) ([^\\s]+) \\[([\\w:/]+\\s[+\\-]\\d{4})] \"([a-zA-Z]+) ([^ \"]+) ?([^\"]+)?\" ([0-9]{3}) ([0-9]+|-)$");
