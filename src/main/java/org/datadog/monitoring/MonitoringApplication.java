@@ -41,6 +41,7 @@ public class MonitoringApplication {
         // These executors will not be shutdown, unless the user closes the application or the main thread dies.
         // If due to some reason any of the executors gets interrupted, they will be restarted.
         ScheduledExecutorService scheduledLogsWorker = Executors.newSingleThreadScheduledExecutor();
+        // 4 here is the no. of workers
         ExecutorService executableWorkers = Executors.newFixedThreadPool(4);
 
         try {
